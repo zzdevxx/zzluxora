@@ -15,6 +15,8 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch, MagicMock
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 from ui.qt_compat import HAS_QT, QApplication, Qt, QDialog
 from core.song_library import SongLibrary
 from core.project_io import ProjectIO
@@ -112,7 +114,7 @@ class TestSection15Consolidation(unittest.TestCase):
         dlg.song_added.connect(emitted_paths.append)
 
         # Setting local path and accepting
-        test_path = str(Path("data/audio/NDC_Worship_-_Bapa_Yang_Kekal.wav").resolve())
+        test_path = str((BASE_DIR / "data" / "audio" / "NDC_Worship_-_Bapa_Yang_Kekal.wav").resolve())
         dlg.txt_local_path.setText(test_path)
         dlg.btn_add_local.setEnabled(True)
         dlg._on_add_local_clicked()

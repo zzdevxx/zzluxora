@@ -10,9 +10,9 @@ Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLU
 
 Perintah wajib:
 ```bash
-PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py   # 177 test unik, tanpa popup
-node scripts/check-anti-slop.js --summary                 # 174 berkas
-python3 ~/ANDREAS/agent-memory/tools/memlog.py search "kata kunci"              # memori agen (DB bersama ~/ANDREAS/agent-memory/memlog.db)
+PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py   # 194 test unik, tanpa popup
+node scripts/check-anti-slop.js --summary                 # ~198 berkas (termasuk non-kode)
+python D:\ANDREAS\agent-memory\tools\memlog.py search "kata kunci"          # memori agen (DB bersama D:\ANDREAS\agent-memory\memlog.db; Linux ASUS: ~/ANDREAS/...)
 ```
 
 ---
@@ -20,7 +20,7 @@ python3 ~/ANDREAS/agent-memory/tools/memlog.py search "kata kunci"              
 ## 📌 1. Ikhtisar & Identitas Proyek
 
 - **Nama Aplikasi:** **ZZLUXORA** (v10.0.0 Flagship Next-Gen)
-- **Repositori:** `https://github.com/zzdevxx/zzluxora-v10.git` (Branch: `main`)
+- **Repositori (origin):** `https://gitlab.com/zzdevxx/zzluxora-v10.git` (Branch: `main`); mirror: `codeberg` dan `github`.
 - **Peneliti / Pengembang:** Andreas Restuawanta Christwara (`NIM: 5312422036`)
 - **Dosen Pembimbing:** Mario Norman Syah, S.Pd., M.Eng.
 - **Institusi:** Program Studi S1 Teknik Komputer, Fakultas Teknik, Universitas Negeri Semarang (UNNES)
@@ -56,12 +56,12 @@ zzluxora-v10/
 │   ├── assets/                # Asset resmi logo & icon (logo_zz.png 1024x1024, logo_zz.ico multi-size)
 │   ├── main_window.py         # Root window, pure native QMenuBar, program view bar, telemetry, blackout
 │   ├── panels/
-│   │   ├── address_tab.py     # Grid DMX Address 256 kanal (maks 24 kolom horizontal, color-coded, 46x46)
+│   │   ├── address_tab.py     # Grid DMX Address 512 kanal (20 kolom horizontal, color-coded, 46x46)
 │   │   ├── analyze_tab.py     # Core skripsi audio analyzer, YouTube downloader, non-blocking DSP
 │   │   ├── result_tab.py      # Metrik afektif Russell 2D, kuadran mood, export to perform
 │   │   ├── perform_tab.py     # Live show controller, playlist reordering, cue transitions
 │   │   ├── page_tab.py        # Virtual executor sheet (clean blank start, flash triggers)
-│   │   ├── mixer_tab.py       # 257 Slider fader (1 Grand Master + 256 DMX) grandMA style (190px compact)
+│   │   ├── mixer_tab.py       # 513 Slider fader (1 Grand Master + 512 DMX) grandMA style (190px compact)
 │   │   ├── fixture_list.py    # Floating window: Drawer fixture & drag-and-drop patching
 │   │   ├── fixture_editor.py  # Floating window: QLC+ style fixture definition editor (.zfx)
 │   │   ├── preview_tab.py     # Floating window: Visualizer panggung 2D multi-screen support
@@ -92,7 +92,7 @@ zzluxora-v10/
 │   ├── qlcplus_template.qxw   # Template SITL loopback QLC+ (8CH)
 │   └── zzluxora_test.qxw      # Workspace pengujian visualizer loopback
 │
-├── tests/                     # Unit testing & verification (105 tests pass 100%)
+├── tests/                     # 15 berkas, 194 test unik (163 unittest + 31 pytest)
 │   ├── test_fft_engine.py, test_audio_loader.py, test_feature_extractor.py
 │   ├── test_emotion_model.py, test_color_engine.py, test_artnet_sender.py
 │   ├── test_project_io.py, test_ui_components.py, test_audit_regressions.py
@@ -121,12 +121,12 @@ zzluxora-v10/
 5. **Jendela Pop-up Mandiri (Floating Windows):**
    - `Fixture List`, `Fixture Editor`, `Stage Visualizer (2D & 3D Perspective with Volumetric Beams & Haze/Smoke FX)`, `Settings`, `Help`, `About` adalah jendela pop-up non-modal independen dengan kontrol *Minimize, Maximize, Close*.
 6. **Enam Tab Utama Program (Workspaces):**
-   - `Tab 1: Address`: Grid 256 kanal DMX (maksimal 24 kolom horizontal, warna sel mengikuti tipe kanal, Clear All dengan konfirmasi, Undo `Ctrl+Z` / Redo `Ctrl+Shift+Z`, tombol cepat `[PATCH 4x ALIEN (GIA)]` DMX001/017/033/049 & `[PATCH 1x KUMA (BENCH)]` DMX001).
+   - `Tab 1: Address`: Grid 512 kanal DMX (20 kolom horizontal, warna sel mengikuti tipe kanal, Clear All dengan konfirmasi, Undo `Ctrl+Z` / Redo `Ctrl+Shift+Z`, satu tombol `PATCH` dengan pilihan preset 4x Alien-AL36 (GIA, DMX001/017/033/049) atau 1x Kumastb-STL47 (bench, DMX001)).
    - `Tab 2: Analyze`: Audio file loader, YouTube audio downloader & converter otomatis, tombol Analyze & Remove, analisis asinkron non-blocking dengan efek blur/dimmed pada area analisis dan tips saintifik DSP.
    - `Tab 3: Result`: Dashboard metrik analisis lengkap (12 parameter: RMS Energy, Spectral Centroid Hz, Chroma STFT 12-Semitone + Deteksi Tonalitas Mayor/Minor, MFCC Density, Spectral Flux, Russell 2D V-A plane, BPM, kuadran mood Praise/Worship, dan Dekomposisi Physical RGBW).
    - `Tab 4: Perform`: Manajemen urutan playlist pertunjukan panggung, auto-populate section cues lagu (Intro/Verse/Chorus/Bridge/Ending), master playback `[GO+]`, `[PREV]`, `[FADE BLACK]`, dan smooth cosine crossfading.
    - `Tab 5: Page`: Lembar tombol virtual executor untuk eksekusi instan suasana panggung (Praise, Worship, Strobe Flash).
-   - `Tab 6: Mixer`: Meja 257 fader fisik dengan Grand Master fader lebih tinggi & dominan (230px, 68px), tombol cepat `[✕]` clear/zero pada setiap fader, bilah navigasi lompat cepat Bank Fader 1 s.d. 7, *tactile ribbed cap*, *illuminated groove rail* dengan LED menyala di belakang fader, dan garis skala kalibrasi analog.
+   - `Tab 6: Mixer`: Meja 513 fader fisik dengan Grand Master fader lebih tinggi & dominan (230px, 68px), tombol cepat `[✕]` clear/zero pada setiap fader, bilah navigasi lompat cepat Bank Fader 1 s.d. 8, *tactile ribbed cap*, *illuminated groove rail* dengan LED menyala di belakang fader, dan garis skala kalibrasi analog.
 
 ---
 
@@ -138,13 +138,13 @@ zzluxora-v10/
   * Default window size: `1200 × 680` px (pas di layar 768p tanpa terpotong panel OS).
   * Minimum window size: `960 × 560` px.
   * Tinggi fader disesuaikan ke `190px` (lebar `52px`) agar pas dan padat di 768p dan meregang elastis di 1080p.
-  * Sel grid DMX berukuran `46×46px` (24 kolom = 1056px, muat lega di layar 1366px).
+  * Sel grid DMX berukuran `46×46px` (20 kolom = 920px, muat lega di layar 1366px).
 
 ---
 
 ## 🔄 5. Disiplin Git & Sinkronisasi
 
-1. Repositori GitHub `zzdevxx/zzluxora-v10` dan `zzdevxx/zzluxora-thesis` adalah **Single Source of Truth**.
+1. Repositori GitLab `zzdevxx/zzluxora-v10` dan `zzdevxx/zzluxora-thesis` (origin) adalah **Single Source of Truth**; Codeberg dan GitHub adalah mirror.
 2. Setiap fitur yang selesai diuji wajib di-commit dan di-push ke branch `main`.
 3. Di laptop utama, sinkronisasi dilakukan hanya dengan `git pull origin main`.
 
@@ -161,7 +161,7 @@ zzluxora-v10/
 1. **Semua warna UI wajib dari token `Theme` di `ui/styles.py`** — hex inline dilarang (hanya `ui/styles.py` dan `ui/icons.py` yang boleh memuat literal hex).
 2. **Anti-slop keras:** tanpa emoji di chrome UI, tanpa em-dash/en-dash (`|` atau `-`), tanpa glow/cyberpunk palsu, tanpa biru web generik untuk aksi utama (hijau `#16a34a` / amber / cyan sesuai `DESIGN.md`).
 3. **Kontras WCAG:** teks pada fill channel terang (amber, cyan, yellow, dll) wajib pakai `Theme.SURFACE_VOID`; gelap → `Theme.TEXT_PRIMARY`. Peta lengkap di `ui/panels/address_tab.py::update_style`.
-4. **Test wajib sebelum commit:** `PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py` → saat ini **177 test unik lulus** (146 unittest + 31 pytest). Wrapper ini menetralkan QMessageBox/QFileDialog/QInputDialog lebih dulu sehingga tidak ada popup yang muncul di layar operator saat pengujian. Perintah lama `python3 -m unittest discover -s tests -p "test_*.py"` masih sah, tetapi **dapat memunculkan popup "Project Saved"** karena beberapa jalur menyimpan berkas. Audit anti-slop: 0 em-dash, 0 emoji, 0 inline hex di luar token/ikon.
+4. **Test wajib sebelum commit:** `PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py` → saat ini **194 test unik lulus** (163 unittest + 31 pytest). Wrapper ini menetralkan QMessageBox/QFileDialog/QInputDialog lebih dulu sehingga tidak ada popup yang muncul di layar operator saat pengujian. Perintah lama `python3 -m unittest discover -s tests -p "test_*.py"` masih sah, tetapi **dapat memunculkan popup "Project Saved"** karena beberapa jalur menyimpan berkas. Audit anti-slop: 0 em-dash, 0 emoji, 0 inline hex di luar token/ikon.
 5. **Ditunda:** *Live Cue Ribbon* (swatch RGBW + pan/tilt per cue) — menunggu arahan owner.
 
-**Status uji terakhir:** 177 test unik OK (146 unittest + 31 pytest) · CLI Art-Net exit 0 · audit anti-slop bersih · jalankan via `tools/run_tests_guarded.py` agar tidak ada popup yang muncul saat pengujian.
+**Status uji terakhir:** 194 test unik OK (163 unittest + 31 pytest) · CLI Art-Net exit 0 · audit anti-slop bersih · jalankan via `tools/run_tests_guarded.py` agar tidak ada popup yang muncul saat pengujian.

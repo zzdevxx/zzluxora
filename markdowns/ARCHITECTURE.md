@@ -98,7 +98,7 @@ Perangkat lunak **ZZLUXORA v10** dirancang dengan prinsip **Pemisahan Kepentinga
 - `fft_engine.py`:
   * Implementasi Cooley-Tukey Radix-2 DIT FFT dan STFT jendela geser.
   * Parameter: $N=2048$, $H=512$, $f_s=22.050\text{ Hz}$.
-  * Menghasilkan frame rate tepat $43.07\text{ FPS}$ ($\approx 23.22\text{ ms}$) yang sinkron dengan laju transmisi fisik DMX512 (44 FPS).
+  * Menghasilkan laju analisis STFT $43.07\text{ FPS}$ ($\approx 23.22\text{ ms}$ per hop). Laju ini **independen** dari laju keluaran DMX: firmware menargetkan periode $23220\ \mu s$ (43.07 fps nominal) dan batas fisik kabel sekitar 44.1 Hz, tetapi tidak ada mekanisme yang menyinkronkan keduanya, dan laju wire belum diukur.
   * Menerapkan Hann Window $w[n] = \sin^2\left(\frac{\pi n}{N-1}\right)$ untuk menekan *spectral leakage* hingga $-31.5\text{ dB}$.
 - `feature_extractor.py`:
   * Menghitung 5 fitur utama MIR:
@@ -134,7 +134,7 @@ Perangkat lunak **ZZLUXORA v10** dirancang dengan prinsip **Pemisahan Kepentinga
 - `icons.py`:
   * Generator SVG prosedural untuk rendering ikon resolusi tinggi bebas distorsi (logo, play, pause, blackout, lamp, strobe, dimmer).
 - `panels/address_tab.py`:
-  * Grid DMX 256 kanal (24 kolom horizontal).
+  * Grid DMX 512 kanal (20 kolom horizontal).
   * Mendukung aksi drop fixture dari Fixture List, auto-patching sekuensial, Clear Patch dengan konfirmasi, serta Undo/Redo (`Ctrl+Z` / `Ctrl+Shift+Z`).
 - `panels/analyze_tab.py`:
   * Audio file loader & YouTube downloader input.
@@ -148,7 +148,7 @@ Perangkat lunak **ZZLUXORA v10** dirancang dengan prinsip **Pemisahan Kepentinga
 - `panels/page_tab.py`:
   * Executor page berisi tombol virtual untuk trigger instan suasana panggung (Praise, Worship, Strobe).
 - `panels/mixer_tab.py`:
-  * Meja mixer 257 fader fisik (1 Grand Master + 256 Kanal DMX).
+  * Meja mixer 513 fader fisik (1 Grand Master + 512 Kanal DMX).
   * Rel fader dengan efek LED backlight dan skala kalibrasi garis analog.
 - `panels/fixture_list.py` (Floating Window):
   * Jendela pop-up daftar lampu yang dapat di-drag ke Tab Address.
@@ -172,8 +172,8 @@ Untuk menjaga kestabilan antarmuka di lingkungan panggung (*zero-freeze guarante
    * Mengirimkan sinyal selesai (`analysisFinished(AnalysisResult)`) ke Tab Result.
 3. **YouTubeDownloaderWorker (`QThread`):**
    * Menangani pengunduhan audio YouTube dan ekstraksi streams tanpa menghalangi interaksi pengguna pada tab lain.
-4. **ArtNetStreamWorker (`QTimer` / Core Loop):**
-   * Memancarkan paket UDP DMX512 pada interval tepat $23.22\text{ ms}$ (43 FPS) untuk menjamin stabilitas frame rate perangkat penerima.
+4. **MainWindow `stream_timer` (`QTimer` pada event loop GUI):**
+   * Memancarkan paket UDP DMX512 pada interval integer 23 ms ($\approx 43.5\text{ Hz}$, kuantisasi 1 ms), bukan 23.22 ms. Laju analisis STFT 43.07 FPS adalah metrik terpisah, dan laju wire DMX ditetapkan firmware serta belum diukur.
 
 ---
 

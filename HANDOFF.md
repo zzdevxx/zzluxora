@@ -28,19 +28,19 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 |---|---|
 | Software `zzdevxx/zzluxora-v10` | HEAD **`1d28bf8`**, working tree **bersih**, sinkron `origin/main` |
 | Naskah `zzdevxx/zzluxora-thesis` | HEAD **`b2fbbc7`**, bersih, sinkron (Bab 4 & 5 naskah v5 terisi data empiris) |
-| Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`cddd36f`**, bersih, sinkron (firmware v4.0.1 pacing absolut & packet counter) |
+| Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`cddd36f`**, bersih, sinkron (firmware v5.0.0 pacing absolut 43.07 FPS & packet counter) |
 | Test suite | **194 test unik lulus** (163 unittest + 31 pytest), exit 0 · jumlah wajib diperiksa, lihat §2c |
 | Skenario Tab | **38/38 skenario per tab LULUS 100%** (`python3 tools/run_all_tab_scenarios.py`) |
 | Skenario Ekstrem | **8/8 skenario lanjut & edge-case LULUS 100%** (`python3 tools/test_advanced_scenarios.py`) |
 | Skenario Undo/Redo | **5/5 skenario context-aware Undo/Redo LULUS 100%** (`python3 tools/test_global_undo_redo.py`) |
-| Anti-slop | **204 berkas, 0 error, 0 warning** |
+| Anti-slop | **0 error, 0 warning** (totalFilesScanned ~198; penghitung ini ikut menghitung berkas non-kode) |
 | Uji Black-Box | **100,0% Pass Rate** (23 kasus software lulus dari 23 kasus; FB-24 N/A [VERIFIKASI LAPANGAN]) |
 | Integrasi Ekosistem | **Tritunggal Sistem saling terhubung (cross-linked)** di seluruh README dan memori |
 
 ### Perintah wajib
 
 ```bash
-cd ~/ANDREAS/zzluxora_v10
+cd D:\ANDREAS\zzluxora-v10    # Linux ASUS: cd ~/ANDREAS/zzluxora-v10
 
 # uji Smart Context-Aware Undo/Redo (QLC+ & grandMA style)
 python3 tools/test_global_undo_redo.py
@@ -314,7 +314,7 @@ Dua butir dari feedback 16 Okt **belum** tuntas:
   untuk memeriksa status bahan; `--manifest` untuk mengunduh lagu nyata dengan
   sidecar provenance. Belum dipakai karena daftar lagu belum ditetapkan owner.
 - Olah data lapangan: `script/tools/analyze_field_data.py` (CSV 41 kolom → tabel
-  Bab 4). **Perhatikan:** alat ini ada di repo **script**, bukan `zzluxora_v10`.
+  Bab 4). **Perhatikan:** alat ini ada di repo **zzluxora-thesis**, bukan `zzluxora-v10`.
 - Bridge korelasi fitur audio: `zzluxora-v10/tools/export_correlation.py`.
 
 ### Sisa temuan low (belum ditindak)
@@ -383,6 +383,9 @@ terbunuh bila available RAM < 1 GB.
 **Sejak 18 Okt 2026 (memlog v2), auto-memory disalin ke memlog secara otomatis.** `hooks/memlog_sync_hook.py` berjalan di Stop dan PreCompact, mengimpor berkas yang berubah dari auto-memory, lalu mencerminkan DB ke `notes/`. Tidak perlu tindakan manual; `import_auto_memory.py` hanya untuk impor paksa seluruh folder.
 
 ```bash
+# Dalam sesi ini workspace ada di Windows: ganti semua ~/ANDREAS/... di bawah
+# dengan D:\ANDREAS\... dan python3 dengan python. Path ~/ANDREAS/... tetap
+# berlaku di laptop ASUS (Linux Mint) sampai cutover dikonfirmasi.
 # boleh dipanggil dari folder mana pun
 python3 ~/ANDREAS/agent-memory/tools/memlog.py search "kata kunci"            # lintas semua project
 python3 ~/ANDREAS/agent-memory/tools/memlog.py search "kata kunci" --bank zzluxora
@@ -430,21 +433,21 @@ Skrip probe pernah memunculkan popup `QMessageBox` berulang di layar owner yang 
 | `tests/test_suite_hygiene.py` | penjaga agar test tidak lolos tanpa dijalankan |
 | `scripts/check-anti-slop.js` | pemindai mutu |
 | `~/ANDREAS/agent-memory/tools/memlog.py` | memori agen (di luar repo, lintas project) |
-| `../script/notes/feedback_v4.md` | **lembar acuan tunggal.** Bagian 1-10 (6 Okt) + bagian 11-14 (17 Okt) |
-| `../script/markdowns/script_plans.md` | status naskah skripsi |
-| `../script/markdowns/script_konsultasi_pembimbing.md` | agenda konsultasi dospem |
+| `../zzluxora-thesis/notes/feedback_v4.md` | **lembar acuan tunggal.** Bagian 1-10 (6 Okt) + bagian 11-14 (17 Okt) |
+| `../zzluxora-thesis/markdowns/script_plans.md` | status naskah skripsi |
+| `../zzluxora-thesis/markdowns/script_konsultasi_pembimbing.md` | agenda konsultasi dospem |
 
 ---
 
 ## 7. Langkah Pertama yang Disarankan
 
 1. Baca **§0** dokumen ini (30 detik), lalu `markdowns/ROADMAP.md` FASE 8,
-   **§2b**, **§2c**, dan `../script/notes/feedback_v4.md` bagian 11-14.
+   **§2b**, **§2c**, dan `../zzluxora-thesis/notes/feedback_v4.md` bagian 11-14.
 2. Verifikasi keadaan. **Periksa jumlah test, bukan hanya status `OK`:**
    ```bash
    PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py
    QT_QPA_PLATFORM=offscreen PYTHONPATH=$PWD/tools python3 -m pytest tests/ --collect-only -q | tail -1
-   # 177 tests collected; periksa angkanya, jangan hanya status OK
+   # 194 tests collected; periksa angkanya, jangan hanya status OK
    ```
 3. **Lihat UI-nya sebelum mengubahnya:**
    ```bash

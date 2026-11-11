@@ -157,7 +157,7 @@ In low-light Front-of-House (FOH) environments, the console surface must not ill
   - Level 3: Program View Bar (6 Workspaces on left, Art-Net status badge, `[BLACKOUT]`, `[PLAY]` on right).
 - **Workspaces**:
   - Grid matrices maintain maximum 24 columns with 46x46px cells for optimal 768p and 1080p fit.
-  - Mixer desk spans 257 faders (Grand Master 68x230px, Channels 52x190px).
+  - Mixer desk spans 513 faders (Grand Master 68x230px, Channels 52x190px).
 
 ---
 

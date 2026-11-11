@@ -71,7 +71,7 @@ Aplikasi mentransmisikan data pencahayaan menggunakan protokol standar internasi
 
 ### 3.3. Enam Tab Utama Program (Workspaces)
 - **FR-11 (Tab 1 — Address):**
-  * Grid matriks 256 kanal DMX (maksimal 24 kolom horizontal per baris, scroll vertikal, sel 46×46px).
+  * Grid matriks 512 kanal DMX (20 kolom horizontal per baris, scroll vertikal, sel 46×46px).
   * Kotak kosong: abu-abu gelap dengan nomor kanal di sudut kanan atas.
   * Kotak terisi: warna latar sesuai jenis fungsi kanal (Merah, Hijau, Biru, Putih, Amber Dimmer, Kuning Strobe), label fungsi teknis (`DIM`, `RED`, `GRN`, `BLU`, `WHT`, `STR`) di tengah kotak, nomor kanal tetap di kanan atas.
   * Tombol [CLEAR PATCH] dengan dialog konfirmasi keamanan.
@@ -96,7 +96,7 @@ Aplikasi mentransmisikan data pencahayaan menggunakan protokol standar internasi
   * Dimulai bersih 100% kosong (tanpa demo otomatis). Tombol digenerate via Perform Tab atau load demo project.
   * Tombol trigger instan untuk suasana Praise, Worship, Verse, Chorus, dan Flash Strobe.
 - **FR-16 (Tab 6 — Mixer):**
-  * Meja fader virtual 257 fader fisik: 1 Grand Master Dimmer (paling kiri) + 256 Kanal DMX (1 s.d. 256).
+  * Meja fader virtual 513 fader fisik: 1 Grand Master Dimmer (paling kiri) + 512 Kanal DMX (1 s.d. 512).
   * Desain fader bergaya grandMA: *tactile ribbed cap* (lebar 30px, tinggi 18px, compact 190px fader height untuk kenyamanan 768p dan 1080p), *illuminated groove rail* (LED menyala di belakang cap), dan skala garis kalibrasi analog.
   * Nilai fader 0–255 dengan slider vertikal dan scrollbar horizontal halus.
   * Tombol: [RESET DMX], [FULL MASTER], [REFRESH].
@@ -107,7 +107,7 @@ Aplikasi mentransmisikan data pencahayaan menggunakan protokol standar internasi
 
 1. **Latensi & Kecepatan:**
    * Latensi pemrosesan audio-ke-DMX < 25 milidetik.
-   * Laju transmisi paket UDP Art-Net stabil pada $43.07\text{ FPS}$ (interval $\approx 23.22\text{ ms}$).
+   * Laju transmisi paket UDP Art-Net pada timer 23 ms ($\approx 43.5\text{ Hz}$, kuantisasi 1 ms). Laju analisis STFT 43.07 FPS (23.22 ms per hop) adalah metrik terpisah; keduanya tidak disinkronkan dan laju wire DMX belum diukur.
 2. **Keandalan & Thread Safety:**
    * Proses analisis audio STFT dan pengunduhan YouTube wajib berjalan di thread terpisah (`QThread` / Worker) agar GUI tidak pernah mengalami kondisi *Not Responding* (ANR).
 3. **Kompatibilitas Lintas Sistem Operasi:**

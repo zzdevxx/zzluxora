@@ -74,7 +74,7 @@
 - [x] **Clean Initial State:** Seluruh tab dimulai dalam kondisi 100% kosong tanpa demo otomatis yang membingungkan operator.
 - [x] **Berkas Demo Khusus:** `showfiles/demo_church_worship.zlx` disediakan untuk memuat demo kapan saja via `File -> Open Project...`.
 - [x] **Tab 1 — Address:**
-  * Matriks 256 kanal DMX (maksimal 24 kolom horizontal, sel compact 46x46px).
+  * Matriks 512 kanal DMX (20 kolom horizontal, sel compact 46x46px).
   * Tag fungsi teknis (`DIM`, `RED`, `GRN`, `BLU`, `WHT`, `STR`).
   * Tombol [CLEAR PATCH], [AUTO PATCH (4 PAR)], [UNDO], [REDO].
 - [x] **Tab 2 — Analyze (Core Skripsi):**
@@ -94,7 +94,7 @@
   * Halaman tombol eksekutor virtual interaktif bergaya grandMA & QLC+ (dimulai bersih).
   * Tombol cue (Praise, Worship, Verse, Chorus) dan Flash Strobe.
 - [x] **Tab 6 — Mixer:**
-  * Meja fader virtual 257 fader: 1 Grand Master Dimmer + 256 Kanal DMX.
+  * Meja fader virtual 513 fader: 1 Grand Master Dimmer + 512 Kanal DMX.
   * Fader taktil grandMA (tinggi 190px, lebar 52px, cap bertakik 30x18, rel ber-LED menyala, garis skala analog).
   * Tombol [RESET DMX], [FULL MASTER], [REFRESH].
 

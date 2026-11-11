@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/badge/Release-v10.0.0-16a34a?style=flat-square)](https://gitlab.com/zzdevxx/zzluxora-v10)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Qt](https://img.shields.io/badge/PySide6-Qt6-41CD52?style=flat-square&logo=qt)](https://doc.qt.io/qtforpython/)
-[![Tests](https://img.shields.io/badge/Tests-177%20passing-brightgreen?style=flat-square)](https://gitlab.com/zzdevxx/zzluxora-v10)
+[![Tests](https://img.shields.io/badge/Tests-194%20passing-brightgreen?style=flat-square)](https://gitlab.com/zzdevxx/zzluxora-v10)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](LICENSE)
 
 
@@ -21,7 +21,7 @@ Proyek ini merupakan perangkat lunak konsol utama dari ekosistem riset terintegr
 
 | Komponen | Repositori | Peran & Deskripsi |
 |---|---|---|
-| 🎛️ **Software Konsol** | [**`zzdevxx/zzluxora-v10`**](https://gitlab.com/zzdevxx/zzluxora-v10) *(Repo Ini)* | Perangkat lunak konsol pencahayaan panggung cerdas (Python 3.10+, PySide6/Qt6, NumPy STFT/MIR Core Engine, grandMA3 style mixer 257 fader, 2D/3D stage visualizer, Art-Net 4 DMX512 UDP transmitter). |
+| 🎛️ **Software Konsol** | [**`zzdevxx/zzluxora-v10`**](https://gitlab.com/zzdevxx/zzluxora-v10) *(Repo Ini)* | Perangkat lunak konsol pencahayaan panggung cerdas (Python 3.10+, PySide6/Qt6, NumPy STFT/MIR Core Engine, grandMA3 style mixer 513 fader, 2D/3D stage visualizer, Art-Net 4 DMX512 UDP transmitter). |
 | 🎓 **Naskah & Riset** | [**`zzdevxx/zzluxora-thesis`**](https://gitlab.com/zzdevxx/zzluxora-thesis) | Naskah akademik skripsi S1 Teknik Komputer FT UNNES, pemodelan matematis STFT Hann & Russell 2D, protokol uji lapangan 41-kolom, instrumen evaluasi (SUS & Kesesuaian), serta draf ilmiah Bab 1–5 lengkap. |
 | ⚡ **Hardware Node** | [**`zzdevxx/esp32-artnet-dmx`**](https://gitlab.com/zzdevxx/esp32-artnet-dmx) | Prototipe perangkat keras konverter nirkabel Art-Net ke DMX512 berbasis ESP32 Dual-Core (FreeRTOS SMP Core 0 DMX / Core 1 WiFi), transceiver RS-485 MAX485, LCD 16x2 I2C, dan boks fabrikasi Box X4 DIY. |
 
@@ -39,7 +39,7 @@ Proyek ini merupakan perangkat lunak konsol utama dari ekosistem riset terintegr
 2. **Antarmuka Konsol Panggung (grandMA3 & QLC+ Inspired):**
    - Desain gelap (*dark industrial console*), modern-minimalis, tanpa ikon/emoji berlebih.
    - Header Bar terintegrasi: status Art-Net live, toggle Play/Pause, dan tombol instan Blackout.
-   - Tab Address: Grid patch DMX maksimal 24 kolom horizontal dengan indikator visual kanal.
+   - Tab Address: Grid patch DMX 512 kanal dalam 20 kolom horizontal dengan indikator visual kanal.
    - Tab Mixer: 513 Slider Fader (1 Master Dimmer + 512 Kanal DMX fisik) bernilai 0–255.
    - Tab Preview: Visualisasi panggung 2D tampak depan dengan draggable fixture dan panel koordinat.
    - Fixture Editor: Pembuat profil lampu custom format JSON.
@@ -63,10 +63,16 @@ python3 main.py --cli --ip 192.168.4.1 --duration 10.0
 ## 🧪 Menjalankan Pengujian (Unit Tests)
 
 ```bash
-python3 -m unittest discover -s tests -p "test_*.py"
+# Linux / macOS
+PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py
+
+# Windows PowerShell
+$env:PYTHONPATH="$PWD/tools"; python tools/run_tests_guarded.py
 ```
 
-Seluruh 11 pengujian unit (FFT, dekomposisi RGBW, emosi, paket Art-Net, dan I/O project) akan terverifikasi 100% lulus.
+Ini adalah runner resmi. `python -m unittest discover -s tests` **jangan** dipakai: perintah itu ikut mengumpulkan berkas gaya-pytest (menghitung ganda) dan dapat memunculkan dialog `QMessageBox`. `run_tests_guarded.py` menetralkan dialog dan memilih runner per berkas. Suite saat ini mencakup **194 test unik** (163 unittest + 31 pytest).
+
+> Catatan bahan uji: 10 berkas WAV di `data/audio/` adalah **audio sintetis** yang dibangkitkan `tools/generate_benchmark_audio.py` (12 detik, 22.050 Hz, mono) dan dinamai menurut lagu referensi; ini **bukan rekaman berlisensi**. Untuk bahan uji persepsi, gunakan `tools/fetch_test_audio.py` yang mengunduh audio nyata beserta sidecar provenance.
 
 ---
 

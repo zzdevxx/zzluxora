@@ -18,8 +18,13 @@ import unittest
 from pathlib import Path
 
 _TOOLS_DIR = Path(__file__).resolve().parent
+_REPO_ROOT = _TOOLS_DIR.parent
+_TESTS_DIR = _REPO_ROOT / "tests"
+
 if str(_TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(_TOOLS_DIR))
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 import _autodialog_guard  # noqa: F401  (installs the dialog stubs)
 
@@ -65,7 +70,7 @@ def run_unittest_suite() -> bool:
     """
     from pathlib import Path
 
-    suite = unittest.TestLoader().loadTestsFromNames(collect_unittest_modules(Path("tests")))
+    suite = unittest.TestLoader().loadTestsFromNames(collect_unittest_modules(_TESTS_DIR))
     return unittest.TextTestRunner(verbosity=1).run(suite).wasSuccessful()
 
 
@@ -78,7 +83,7 @@ def run_pytest_suite() -> bool:
     pytest_modules = []
     from pathlib import Path
 
-    for path in sorted(Path("tests").glob("test_*.py")):
+    for path in sorted(_TESTS_DIR.glob("test_*.py")):
         if _is_pytest_module(path):
             pytest_modules.append(str(path))
 

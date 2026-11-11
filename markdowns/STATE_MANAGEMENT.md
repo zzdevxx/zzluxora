@@ -48,7 +48,7 @@ Aplikasi **ZZLUXORA v10** mengadopsi prinsip **Single Source of Truth (SSOT)** d
   - Saat `undo()` dipanggil: Mengembalikan kondisi alokasi kanal persis seperti sebelum aksi, memulihkan konfigurasi tanpa merusak channel lain.
 
 #### B. `FaderChangeCommand`
-* **Target:** Meja Tab Mixer (257 Fader).
+* **Target:** Meja Tab Mixer (513 Fader).
 * **Mekanisme:**
   - Menyimpan `channel_id`, `old_value`, dan `new_value`.
   - Menerapkan kompresi perintah (*Command Compression via `id()` dan `mergeWith()`*): Jika pengguna menggeser fader berulang kali dalam durasi 500 ms, seluruh pergerakan digabungkan menjadi satu langkah undo tunggal.

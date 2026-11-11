@@ -70,7 +70,7 @@ Jumlah pada tabel di atas menghitung fungsi uji. Angka **129** yang dilaporkan r
 ### 4.1. Baseline Resolusi 1366×768 (Linux Mint Dev Laptop)
 - Pastikan jendela utama muat secara proporsional tanpa ada tombol atau tab yang terpotong.
 - Tab Mixer dapat di-scroll horizontal secara mulus (*smooth horizontal scroll*).
-- Tab Address menampilkan 24 kolom kotak tanpa horizontal scrollbar yang mengganggu.
+- Tab Address menampilkan 20 kolom kotak tanpa horizontal scrollbar yang mengganggu.
 
 ### 4.2. Baseline Resolusi 1920×1080 (Windows 11 Main Laptop)
 - Seluruh panel berekspansi mengisi ruang Full HD secara elastis.

@@ -666,7 +666,10 @@ class MainWindow(QMainWindow if HAS_QT else object):
             self._crossfade_timer.start()
 
     def _on_crossfade_tick(self) -> None:
-        self._fade_elapsed += 0.023
+        # Accumulate the timer's real interval, not a fixed 23 ms: _apply_stream_rate
+        # rewrites this interval for any user-selected FPS, and a hardcoded step made
+        # the fade finish early or late by ~30% away from the default rate.
+        self._fade_elapsed += self._crossfade_timer.interval() / 1000.0
         progress = min(1.0, self._fade_elapsed / self._fade_duration)
         # Cosine S-curve interpolation
         factor = 0.5 * (1.0 - math.cos(math.pi * progress))

@@ -99,6 +99,12 @@ class SettingsDialog(QDialog if HAS_QT else object):
         uni_idx = min(3, max(0, self.current_universe))
         self.combo_universe.setCurrentIndex(uni_idx)
         self.combo_universe.setFixedWidth(70)
+        # The ESP32 node (firmware v5.0.0) filters on Port-Address 0 only; other
+        # values are valid for QLC+/SITL loopback but are dropped by the hardware.
+        self.combo_universe.setToolTip(
+            "Art-Net Port-Address. Node ESP32 firmware v5.0.0 hanya menerima Universe 0; "
+            "nilai lain hanya berguna untuk loopback QLC+/SITL."
+        )
         row_uni.addWidget(self.combo_universe)
 
         row_uni.addSpacing(20)

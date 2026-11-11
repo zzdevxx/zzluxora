@@ -11,13 +11,13 @@
 | :--- | :--- | :--- | :--- |
 | **`MainWindow`** | `ui/main_window.py` | `QMainWindow` | Root application window, native QMenuBar, program bar, global undo, Art-Net loop |
 | **`TactileFader`** | `ui/widgets/tactile_fader.py` | `QWidget` | Fader slider grandMA (rel LED menyala, cap bertakik 30x18, garis skala, tinggi 190px) |
-| **`AddressGrid`** | `ui/panels/address_tab.py` | `QWidget` | Matriks 256 kanal DMX (sel 46x46px), drag-drop receiver, clean tags (DIM, RED, GRN, BLU, WHT, STR) |
+| **`AddressGrid`** | `ui/panels/address_tab.py` | `QWidget` | Matriks 512 kanal DMX (sel 46x46px), drag-drop receiver, clean tags (DIM, RED, GRN, BLU, WHT, STR) |
 | **`AnalyzePanel`** | `ui/panels/analyze_tab.py` | `QWidget` | Pemuat audio, pemicu YouTube dialog, progress bar saintifik non-blocking QThread |
 | **`YouTubeDialog`** | `ui/widgets/youtube_dialog.py`| `QDialog` | Pop-up pengunduh audio YouTube mandiri & ekstraksi berkas lokal ke `data/audio/` |
 | **`ResultPanel`** | `ui/panels/result_tab.py` | `QWidget` | Dashboard metrik Russell 2D, kuadran mood, tombol Export to Perform |
 | **`PerformPanel`** | `ui/panels/perform_tab.py` | `QWidget` | Show controller, playlist reordering, cue timing, Generate Executors |
 | **`PagePanel`** | `ui/panels/page_tab.py` | `QWidget` | Virtual executor sheet, tombol hasil auto-generate dari Perform, flash strobe |
-| **`MixerPanel`** | `ui/panels/mixer_tab.py` | `QWidget` | Container 257 fader fisik (1 Master + 256 DMX) dengan smooth horizontal scrollbar |
+| **`MixerPanel`** | `ui/panels/mixer_tab.py` | `QWidget` | Container 513 fader fisik (1 Master + 512 DMX) dengan smooth horizontal scrollbar |
 | **`FixtureListWin`** | `ui/panels/fixture_list.py`| `QWidget` (Window)| Jendela pop-up non-modal daftar fixture lampu dengan MIME drag source |
 | **`FixtureEditorWin`**| `ui/panels/fixture_editor.py`| `QMainWindow` | Jendela pop-up non-modal editor profil lampu `.zfx` berstandar QLC+ |
 | **`StageVisualizerWin`**| `ui/panels/preview_tab.py`| `QWidget` (Window)| Jendela visualizer panggung 2D multi-screen support (non-modal) |
@@ -60,7 +60,7 @@
 ### 2.2. `AddressGrid` (DMX 1–256 Patch Sheet)
 - **Base Class:** `QWidget` dengan scroll vertikal `QScrollArea`.
 - **Layout Geometri:**
-  * Maksimal 24 kolom horizontal per baris.
+  * 20 kolom horizontal per baris.
   * Ukuran sel: 46×46px elastis mengikuti lebar jendela (total lebar 1056px, muat lega di layar 1366px).
 - **Logika State Per Sel Kotak:**
   * *Unpatched:* Latar belakang `#282c34`, border 1px `#383e4c`, nomor DMX di sudut kanan atas (`#94a3b8`).

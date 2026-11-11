@@ -90,8 +90,9 @@ def build_argument_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     args = build_argument_parser().parse_args(argv)
 
-    # If --cli or DISPLAY is not available, run CLI
-    if args.cli or "DISPLAY" not in os.environ:
+    # If --cli, or running headless on Linux/macOS without X11/Wayland display, run CLI
+    is_headless_posix = (os.name != "nt") and ("DISPLAY" not in os.environ and "WAYLAND_DISPLAY" not in os.environ)
+    if args.cli or is_headless_posix:
         run_cli_demo(target_ip=args.ip, duration=args.duration)
     else:
         # Check if Qt (PySide6 or PyQt6) is available for GUI

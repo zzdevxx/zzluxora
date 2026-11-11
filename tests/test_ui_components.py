@@ -3,6 +3,7 @@ test_ui_components.py - Unit tests for ZZLUXORA v10 UI and project fixtures.
 """
 
 import json
+import os
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -600,7 +601,11 @@ class TestUIModules(unittest.TestCase):
                 self.assertIn(channel_name, slider.get("Caption"))
 
     def test_qlc_user_fixture_definition_is_installed_for_qxw(self):
-        user_fixture = Path.home() / ".qlcplus" / "fixtures" / "Kumastb" / "Kumastb-STL47.qxf"
+        user_fixture = (
+            (Path.home() / "QLC+" / "Fixtures" / "Kumastb" / "Kumastb-STL47.qxf")
+            if os.name == "nt"
+            else (Path.home() / ".qlcplus" / "fixtures" / "Kumastb" / "Kumastb-STL47.qxf")
+        )
         self.assertTrue(user_fixture.is_file(), f"QLC+ user fixture definition missing: {user_fixture}")
 
     def test_official_kumastb_and_alien_fixtures(self):
