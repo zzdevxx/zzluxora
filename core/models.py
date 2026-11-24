@@ -23,6 +23,7 @@ class ChannelType(str, Enum):
     SPEED = "speed"
     MACRO = "macro"
     PROGRAM = "program"
+    EFFECT = "effect"
     EMPTY = "empty"
 
 
@@ -126,6 +127,61 @@ class FixtureProfile:
                 FixtureChannel(6, ChannelType.PROGRAM, "Program"),
                 FixtureChannel(7, ChannelType.SPEED, "Speed"),
                 FixtureChannel(8, ChannelType.EMPTY, "Emptz"),
+            ]
+        )
+
+    @classmethod
+    def create_zzdree_36x(cls, name: str = "zzdree-36X") -> FixtureProfile:
+        """Official 3-channel pure RGB fixture profile (no dimmer channel)."""
+        return cls(
+            id="zzdree_36x",
+            name=name,
+            manufacturer="zzdree",
+            channel_count=3,
+            channels=[
+                FixtureChannel(1, ChannelType.RED, "Red"),
+                FixtureChannel(2, ChannelType.GREEN, "Green"),
+                FixtureChannel(3, ChannelType.BLUE, "Blue"),
+            ]
+        )
+
+    @classmethod
+    def create_illumsolid_ysp01(cls, name: str = "Illumsolid-YSP01") -> FixtureProfile:
+        """Official 8-channel RGBW fixture profile: Dimmer, RGBW, Program, Empty, Emptz."""
+        return cls(
+            id="illumsolid_ysp01",
+            name=name,
+            manufacturer="Illumsolid",
+            channel_count=8,
+            channels=[
+                FixtureChannel(1, ChannelType.DIMMER, "Dimmer", default_value=255),
+                FixtureChannel(2, ChannelType.RED, "Red"),
+                FixtureChannel(3, ChannelType.GREEN, "Green"),
+                FixtureChannel(4, ChannelType.BLUE, "Blue"),
+                FixtureChannel(5, ChannelType.WHITE, "White"),
+                FixtureChannel(6, ChannelType.PROGRAM, "Program"),
+                FixtureChannel(7, ChannelType.EMPTY, "Empty"),
+                FixtureChannel(8, ChannelType.EMPTY, "Emptz"),
+            ]
+        )
+
+    @classmethod
+    def create_wisdom_54x3(cls, name: str = "Wisdom-54X3") -> FixtureProfile:
+        """Official 8-channel RGB fixture profile: Dimmer, Strobe, Effect, Speed, RGB, Empty."""
+        return cls(
+            id="wisdom_54x3",
+            name=name,
+            manufacturer="Wisdom",
+            channel_count=8,
+            channels=[
+                FixtureChannel(1, ChannelType.DIMMER, "Dimmer", default_value=255),
+                FixtureChannel(2, ChannelType.STROBE, "Strobe"),
+                FixtureChannel(3, ChannelType.EFFECT, "Effect"),
+                FixtureChannel(4, ChannelType.SPEED, "Speed"),
+                FixtureChannel(5, ChannelType.RED, "Red"),
+                FixtureChannel(6, ChannelType.GREEN, "Green"),
+                FixtureChannel(7, ChannelType.BLUE, "Blue"),
+                FixtureChannel(8, ChannelType.EMPTY, "Empty"),
             ]
         )
 

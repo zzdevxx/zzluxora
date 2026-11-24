@@ -1,0 +1,177 @@
+{
+  "app": "ZZLUXORA",
+  "version": "10.0.0",
+  "project_name": "zzdree 36X Stage (4x)",
+  "target_ip": "127.0.0.1",
+  "universe": 0,
+  "master_dimmer": 255,
+  "patches": [
+    {
+      "start_channel": 1,
+      "model": "zzdree-36X #1",
+      "channels": [
+        {
+          "index": 1,
+          "type": "red",
+          "label": "Red"
+        },
+        {
+          "index": 2,
+          "type": "green",
+          "label": "Green"
+        },
+        {
+          "index": 3,
+          "type": "blue",
+          "label": "Blue"
+        }
+      ]
+    },
+    {
+      "start_channel": 17,
+      "model": "zzdree-36X #2",
+      "channels": [
+        {
+          "index": 1,
+          "type": "red",
+          "label": "Red"
+        },
+        {
+          "index": 2,
+          "type": "green",
+          "label": "Green"
+        },
+        {
+          "index": 3,
+          "type": "blue",
+          "label": "Blue"
+        }
+      ]
+    },
+    {
+      "start_channel": 33,
+      "model": "zzdree-36X #3",
+      "channels": [
+        {
+          "index": 1,
+          "type": "red",
+          "label": "Red"
+        },
+        {
+          "index": 2,
+          "type": "green",
+          "label": "Green"
+        },
+        {
+          "index": 3,
+          "type": "blue",
+          "label": "Blue"
+        }
+      ]
+    },
+    {
+      "start_channel": 49,
+      "model": "zzdree-36X #4",
+      "channels": [
+        {
+          "index": 1,
+          "type": "red",
+          "label": "Red"
+        },
+        {
+          "index": 2,
+          "type": "green",
+          "label": "Green"
+        },
+        {
+          "index": 3,
+          "type": "blue",
+          "label": "Blue"
+        }
+      ]
+    }
+  ],
+  "songs": [
+    {
+      "title": "Kebaikan Tuhan (Goodness of God)",
+      "duration_sec": 240.0,
+      "bpm": 72.0,
+      "valence": 0.65,
+      "arousal": -0.42,
+      "quadrant": "Q3 Worship",
+      "palette": {
+        "R": 180,
+        "G": 90,
+        "B": 240,
+        "W": 0
+      }
+    },
+    {
+      "title": "Nyanyi Bagi Dia (Praise the Lord)",
+      "duration_sec": 210.0,
+      "bpm": 128.0,
+      "valence": 0.82,
+      "arousal": 0.74,
+      "quadrant": "Q1 Praise",
+      "palette": {
+        "R": 255,
+        "G": 210,
+        "B": 30,
+        "W": 0
+      }
+    }
+  ],
+  "cues": [
+    {
+      "label": "PRAISE\nAll Bright",
+      "type": "scene",
+      "color": {
+        "R": 255,
+        "G": 200,
+        "B": 80,
+        "W": 0
+      },
+      "dimmer": 255,
+      "fade_time": 1.5
+    },
+    {
+      "label": "WORSHIP\nDeep Blue",
+      "type": "scene",
+      "color": {
+        "R": 30,
+        "G": 80,
+        "B": 240,
+        "W": 0
+      },
+      "dimmer": 200,
+      "fade_time": 2.5
+    },
+    {
+      "label": "ALTAR CALL\nWarm Amber",
+      "type": "scene",
+      "color": {
+        "R": 240,
+        "G": 120,
+        "B": 20,
+        "W": 0
+      },
+      "dimmer": 220,
+      "fade_time": 2.0
+    },
+    {
+      "label": "STROBE FLASH\nInstant",
+      "type": "flash",
+      "color": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "W": 0
+      },
+      "dimmer": 255,
+      "fade_time": 0.0
+    }
+  ],
+  "faders": {
+    "0": 255
+  }
+}

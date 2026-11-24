@@ -581,23 +581,37 @@ class MainWindow(QMainWindow if HAS_QT else object):
                 b_val = min(255, b_val + w_val)
                 w_val = 0
 
+            # Fixtures without a dedicated dimmer channel (e.g. 3CH RGB zzdree-36X)
+            # cannot dim via channel 1, so their RGB(W) channels must be scaled
+            # directly by intensity / 255.0 so blackout, fade black, and partial
+            # dimmer values take effect. Fixtures with a dimmer keep unscaled RGB.
+            fixture_has_dimmer: dict[int, bool] = {}
+            for fix in self.tab_address.get_patched_fixtures():
+                ch_list = fix.get("channels", [])
+                has_dim = any("dim" in str(c.get("type", "")).lower() for c in ch_list)
+                for c in ch_list:
+                    fixture_has_dimmer[int(c["channel"])] = has_dim
+            fallback_has_dimmer = any("dim" in b.channel_type.lower() for b in patched_boxes)
+            intensity_scale = intensity / 255.0
+
             for box in patched_boxes:
                 ch = box.channel_num
                 ctype = box.channel_type.lower()
+                has_dim = fixture_has_dimmer.get(ch, fallback_has_dimmer)
                 val = 0
                 if "dim" in ctype:
                     val = intensity
                 elif "red" in ctype:
-                    val = r_val
+                    val = r_val if has_dim else int(round(r_val * intensity_scale))
                 elif "green" in ctype:
-                    val = g_val
+                    val = g_val if has_dim else int(round(g_val * intensity_scale))
                 elif "blue" in ctype:
-                    val = b_val
+                    val = b_val if has_dim else int(round(b_val * intensity_scale))
                 elif "white" in ctype:
-                    val = w_val
+                    val = w_val if has_dim else int(round(w_val * intensity_scale))
                 elif "strobe" in ctype:
                     val = 255 if is_flash else 0
-                elif ctype in ["program", "speed", "empty"]:
+                elif ctype in ["program", "speed", "effect", "empty"]:
                     val = 0
                 target[ch - 1] = max(0, min(255, val))
         else:

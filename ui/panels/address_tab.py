@@ -630,7 +630,7 @@ class AddressTab(QWidget if HAS_QT else object):
         ctrl_bar.addStretch()
 
         self.btn_patch = QPushButton("PATCH")
-        self.btn_patch.setToolTip("Patch a preset fixture layout")
+        self.btn_patch.setToolTip("Patch 4x zzdree-36X (DMX 001, 017, 033, 049)")
         self.btn_patch.clicked.connect(self._on_patch_clicked)
         ctrl_bar.addWidget(self.btn_patch)
 
@@ -998,26 +998,31 @@ class AddressTab(QWidget if HAS_QT else object):
             self.patch_changed.emit()
 
     def _on_patch_clicked(self) -> None:
-        """Ask which preset to patch, then apply it.
+        """Directly patch the active 4x zzdree-36X stage layout (DMX 001, 017, 033, 049)."""
+        self._on_patch_zzdree_36x()
 
-        One button plus a chooser replaces two buttons that each committed a
-        specific layout. The chooser makes the choice explicit and leaves room
-        for further presets without widening the control bar.
-        """
-        pilihan, ok = QInputDialog.getItem(
-            self,
-            "Patch Preset",
-            "Which fixture layout should be patched?",
-            ["4x Alien-AL36 (GIA stage)", "1x Kumastb-STL47 (bench test)"],
-            0,
-            False,
-        )
-        if not ok:
-            return
-        if pilihan.startswith("4x"):
-            self._on_patch_alien_gia()
-        else:
-            self._on_patch_kuma_bench()
+    def _on_patch_zzdree_36x(self) -> None:
+        """Auto-patch four zzdree-36X (3CH RGB) fixtures at DMX001, DMX017, DMX033, DMX049."""
+        self.record_undo()
+        self.fixture_order = []
+        for box in self.grid_area.boxes.values():
+            box.set_unpatched()
+
+        zzdree_channels = [
+            {"type": "red", "label": "Red"},
+            {"type": "green", "label": "Green"},
+            {"type": "blue", "label": "Blue"},
+        ]
+        start_addresses = [1, 17, 33, 49]
+        for fixture_idx, start_ch in enumerate(start_addresses):
+            fixture_data = {
+                "name": f"zzdree-36X #{fixture_idx + 1}",
+                "channels": zzdree_channels,
+            }
+            self._on_fixture_dropped(start_ch, fixture_data, record_undo=False, notify=False)
+
+        self.update_fixture_brackets()
+        self.patch_changed.emit()
 
     def _on_patch_alien_gia(self) -> None:
         """Auto-patch four Alien-AL36 fixtures at DMX001, DMX017, DMX033, DMX049."""
@@ -1074,5 +1079,5 @@ class AddressTab(QWidget if HAS_QT else object):
         self.patch_changed.emit()
 
     def _on_auto_patch_default(self) -> None:
-        """Legacy compatibility method pointing to the Alien-AL36 4x GIA setup."""
-        self._on_patch_alien_gia()
+        """Default quick-patch helper pointing to the 4x zzdree-36X setup."""
+        self._on_patch_zzdree_36x()

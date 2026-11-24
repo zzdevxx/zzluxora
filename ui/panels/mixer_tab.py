@@ -236,7 +236,10 @@ class MixerTab(QWidget if HAS_QT else object):
             fixture_prefix = fixture_name.split("#", 1)[0].strip()
             fixture_index = fixture_name.split("#", 1)[1].split()[0] if "#" in fixture_name else ""
             short_fixture = (fixture_prefix.replace("Alien-", "").replace("Alien ", "")
-                             .replace("Kumastb-", "").replace("Kumastb ", ""))
+                             .replace("Kumastb-", "").replace("Kumastb ", "")
+                             .replace("zzdree-", "").replace("zzdree ", "")
+                             .replace("Illumsolid-", "").replace("Illumsolid ", "")
+                             .replace("Wisdom-", "").replace("Wisdom ", ""))
             if fixture_index:
                 short_fixture = f"{short_fixture}-{fixture_index}"
             for ch_info in channels:

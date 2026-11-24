@@ -601,76 +601,97 @@ class TestUIModules(unittest.TestCase):
                 self.assertIn(channel_name, slider.get("Caption"))
 
     def test_qlc_user_fixture_definition_is_installed_for_qxw(self):
-        user_fixture = (
-            (Path.home() / "QLC+" / "Fixtures" / "Kumastb" / "Kumastb-STL47.qxf")
+        base = (
+            (Path.home() / "QLC+" / "Fixtures")
             if os.name == "nt"
-            else (Path.home() / ".qlcplus" / "fixtures" / "Kumastb" / "Kumastb-STL47.qxf")
+            else (Path.home() / ".qlcplus" / "fixtures")
         )
-        self.assertTrue(user_fixture.is_file(), f"QLC+ user fixture definition missing: {user_fixture}")
+        for manufacturer, filename in (
+            ("zzdree", "zzdree-36X.qxf"),
+            ("Kumastb", "Kumastb-STL47.qxf"),
+        ):
+            flat_path = base / filename
+            nested_path = base / manufacturer / filename
+            self.assertTrue(
+                flat_path.is_file() or nested_path.is_file(),
+                f"QLC+ user fixture definition missing: checked {flat_path} and {nested_path}",
+            )
 
     def test_official_kumastb_and_alien_fixtures(self):
         fixtures_dir = BASE_DIR / "fixtures"
         zz_fixture_dir = (BASE_DIR.parent / "zz-fixture") if (BASE_DIR.parent / "zz-fixture").exists() else (Path.home() / "ANDREAS" / "zz-fixture")
 
-        # Verify fixtures directory contains ONLY official .zfx profiles
+        # Verify fixtures directory contains ONLY the 5 official .zfx profiles
         fixture_files = sorted([f.name for f in fixtures_dir.glob("*") if f.is_file()])
-        self.assertEqual(fixture_files, ["Alien-AL36.zfx", "Kumastb-STL47.zfx"])
+        self.assertEqual(
+            fixture_files,
+            [
+                "Alien-AL36.zfx",
+                "Illumsolid-YSP01.zfx",
+                "Kumastb-STL47.zfx",
+                "Wisdom-54X3.zfx",
+                "zzdree-36X.zfx",
+            ],
+        )
 
-        # 1. Test Kumastb STL47 (8CH RGBW) .zfx
-        kuma_zfx_file = fixtures_dir / "Kumastb-STL47.zfx"
-        self.assertTrue(kuma_zfx_file.is_file())
-        with open(kuma_zfx_file, "r", encoding="utf-8") as fp:
-            kuma_data = json.load(fp)
-        self.assertEqual(kuma_data["manufacturer"], "Kumastb")
-        self.assertEqual(kuma_data["name"], "Kumastb-STL47")
-        self.assertEqual(kuma_data["model"], "STL47")
-        self.assertEqual(kuma_data["channel_count"], 8)
-        self.assertEqual([ch["label"] for ch in kuma_data["channels"]],
-                         ["Dimmer", "Red", "Green", "Blue", "White", "Strobe", "Program", "Speed"])
-
-        # Test Kumastb .qxf from zz-fixture repository
-        kuma_qxf_file = zz_fixture_dir / "Kumastb-STL47.qxf"
-        self.assertTrue(kuma_qxf_file.is_file())
-        ns = {"q": "http://www.qlcplus.org/FixtureDefinition"}
-        qxf_kuma = ET.parse(kuma_qxf_file).getroot()
-        self.assertEqual([node.attrib["Name"] for node in qxf_kuma.findall("q:Channel", ns)],
-                         ["Dimmer", "Red", "Green", "Blue", "White", "Strobe", "Program", "Speed"])
-
-        # 2. Test Alien AL36 (8CH RGB) .zfx
-        alien_zfx_file = fixtures_dir / "Alien-AL36.zfx"
-        self.assertTrue(alien_zfx_file.is_file())
-        with open(alien_zfx_file, "r", encoding="utf-8") as fp:
-            alien_data = json.load(fp)
-        self.assertEqual(alien_data["manufacturer"], "Alien")
-        self.assertEqual(alien_data["name"], "Alien-AL36")
-        self.assertEqual(alien_data["model"], "AL36")
-        self.assertEqual(alien_data["channel_count"], 8)
-        self.assertEqual([ch["label"] for ch in alien_data["channels"]],
-                         ["Dimmer", "Red", "Green", "Blue", "Empty", "Program", "Speed", "Emptz"])
-
-        # Test Alien .qxf from zz-fixture repository
-        alien_qxf_file = zz_fixture_dir / "Alien-AL36.qxf"
-        self.assertTrue(alien_qxf_file.is_file())
-        qxf_alien = ET.parse(alien_qxf_file).getroot()
-        self.assertEqual([node.attrib["Name"] for node in qxf_alien.findall("q:Channel", ns)],
-                         ["Dimmer", "Red", "Green", "Blue", "Empty", "Program", "Speed", "Emptz"])
-        self.assertTrue(alien_qxf_file.is_file())
-        qxf_alien = ET.parse(alien_qxf_file).getroot()
-        self.assertEqual([node.attrib["Name"] for node in qxf_alien.findall("q:Channel", ns)],
-                         ["Dimmer", "Red", "Green", "Blue", "Empty", "Program", "Speed", "Emptz"])
-
-        # 3. Test FixtureProfile factory methods
         from core.models import FixtureProfile
-        kuma_prof = FixtureProfile.create_kumastb_stl47()
-        self.assertEqual(kuma_prof.manufacturer, "Kumastb")
-        self.assertEqual(kuma_prof.channel_count, 8)
-        self.assertEqual(kuma_prof.name, "Kumastb-STL47",
-                         "factory name must match the section 2 standard and fixtures/Kumastb-STL47.zfx")
-        alien_prof = FixtureProfile.create_alien_al36()
-        self.assertEqual(alien_prof.manufacturer, "Alien")
-        self.assertEqual(alien_prof.channel_count, 8)
-        self.assertEqual(alien_prof.name, "Alien-AL36",
-                         "factory name must match the section 2 standard and fixtures/Alien-AL36.zfx")
+
+        ns = {"q": "http://www.qlcplus.org/FixtureDefinition"}
+        official_specs = [
+            (
+                "Alien-AL36", "alien_al36", "Alien", "AL36", 8,
+                ["Dimmer", "Red", "Green", "Blue", "Empty", "Program", "Speed", "Emptz"],
+                FixtureProfile.create_alien_al36,
+            ),
+            (
+                "Illumsolid-YSP01", "illumsolid_ysp01", "Illumsolid", "YSP01", 8,
+                ["Dimmer", "Red", "Green", "Blue", "White", "Program", "Empty", "Emptz"],
+                FixtureProfile.create_illumsolid_ysp01,
+            ),
+            (
+                "Kumastb-STL47", "kumastb_stl47", "Kumastb", "STL47", 8,
+                ["Dimmer", "Red", "Green", "Blue", "White", "Strobe", "Program", "Speed"],
+                FixtureProfile.create_kumastb_stl47,
+            ),
+            (
+                "Wisdom-54X3", "wisdom_54x3", "Wisdom", "54X3", 8,
+                ["Dimmer", "Strobe", "Effect", "Speed", "Red", "Green", "Blue", "Empty"],
+                FixtureProfile.create_wisdom_54x3,
+            ),
+            (
+                "zzdree-36X", "zzdree_36x", "zzdree", "36X", 3,
+                ["Red", "Green", "Blue"],
+                FixtureProfile.create_zzdree_36x,
+            ),
+        ]
+
+        for name, expected_id, manufacturer, model, ch_count, expected_labels, factory in official_specs:
+            with self.subTest(fixture=name):
+                zfx_file = fixtures_dir / f"{name}.zfx"
+                self.assertTrue(zfx_file.is_file(), f"missing {zfx_file}")
+                with open(zfx_file, "r", encoding="utf-8") as fp:
+                    zfx_data = json.load(fp)
+                self.assertEqual(zfx_data["id"], expected_id)
+                self.assertEqual(zfx_data["name"], name)
+                self.assertEqual(zfx_data["manufacturer"], manufacturer)
+                self.assertEqual(zfx_data["model"], model)
+                self.assertEqual(zfx_data["channel_count"], ch_count)
+                self.assertEqual([ch["label"] for ch in zfx_data["channels"]], expected_labels)
+
+                qxf_file = zz_fixture_dir / f"{name}.qxf"
+                self.assertTrue(qxf_file.is_file(), f"missing {qxf_file}")
+                qxf_root = ET.parse(qxf_file).getroot()
+                self.assertEqual(
+                    [node.attrib["Name"] for node in qxf_root.findall("q:Channel", ns)],
+                    expected_labels,
+                )
+
+                profile = factory()
+                self.assertEqual(profile.id, expected_id)
+                self.assertEqual(profile.manufacturer, manufacturer)
+                self.assertEqual(profile.channel_count, ch_count)
+                self.assertEqual(profile.name, name)
+                self.assertEqual([ch.label for ch in profile.channels], expected_labels)
 
     def test_headless_main_window_instantiation(self):
         self._application()
@@ -1238,6 +1259,8 @@ class TestUIModules(unittest.TestCase):
         patched = lambda: sum(1 for b in tab.grid_area.boxes.values() if b.is_patched)
 
         for label, action, expected_cells in (
+            ("ZZDREE", tab._on_patch_zzdree_36x, 12),
+            ("PATCH_CLICK", tab._on_patch_clicked, 12),
             ("ALIEN", tab._on_patch_alien_gia, 32),
             ("KUMA", tab._on_patch_kuma_bench, 8),
         ):
@@ -1405,7 +1428,9 @@ class TestUIModules(unittest.TestCase):
         self._application()
         from ui.main_window import MainWindow
 
-        for label, action in (("ALIEN", lambda t: t._on_patch_alien_gia()),
+        for label, action in (("ZZDREE", lambda t: t._on_patch_zzdree_36x()),
+                              ("PATCH_CLICK", lambda t: t._on_patch_clicked()),
+                              ("ALIEN", lambda t: t._on_patch_alien_gia()),
                               ("KUMA", lambda t: t._on_patch_kuma_bench())):
             with self.subTest(press=label):
                 win = MainWindow()
@@ -1884,6 +1909,143 @@ class TestUIModules(unittest.TestCase):
         self.assertFalse(result.btn_export.isEnabled())
         self.assertIsNone(result.current_analysis)
 
+        win.close()
+
+    def test_zzdree_36x_active_patch_button_and_mixer_tags(self):
+        """PATCH directly patches 4x zzdree-36X at DMX 1/17/33/49 (12ch total) with compact mixer tags."""
+        self._application()
+        from ui.main_window import MainWindow
+
+        win = MainWindow()
+        tab = win.tab_address
+
+        with patch("ui.panels.address_tab.QInputDialog.getItem") as dialog_mock:
+            tab._on_patch_clicked()
+            self.assertFalse(dialog_mock.called, "PATCH must patch 4x zzdree-36X directly without a dialog")
+
+        fixtures = tab.get_patched_fixtures()
+        self.assertEqual(len(fixtures), 4)
+        self.assertEqual([f["start_channel"] for f in fixtures], [1, 17, 33, 49])
+        self.assertEqual([f["name"] for f in fixtures], [f"zzdree-36X #{i}" for i in range(1, 5)])
+        self.assertEqual(sum(1 for b in tab.grid_area.boxes.values() if b.is_patched), 12)
+
+        for start_ch in (1, 17, 33, 49):
+            self.assertEqual(tab.grid_area.boxes[start_ch].channel_type, "red")
+            self.assertEqual(tab.grid_area.boxes[start_ch + 1].channel_type, "green")
+            self.assertEqual(tab.grid_area.boxes[start_ch + 2].channel_type, "blue")
+            self.assertFalse(tab.grid_area.boxes[start_ch + 3].is_patched)
+
+        # Mixer compact tags strip zzdree-, Illumsolid-, and Wisdom- prefixes
+        self.assertEqual(win.tab_mixer.faders[1].fixture_tag, "36X-1:RED")
+        self.assertEqual(win.tab_mixer.faders[2].fixture_tag, "36X-1:GRN")
+        self.assertEqual(win.tab_mixer.faders[3].fixture_tag, "36X-1:BLU")
+        self.assertEqual(win.tab_mixer.faders[49].fixture_tag, "36X-4:RED")
+
+        win.tab_mixer.sync_patch([
+            {"name": "Illumsolid-YSP01 #1", "channels": [{"channel": 1, "type": "dimmer", "label": "Dimmer"}]},
+            {"name": "Wisdom-54X3 #1", "channels": [{"channel": 17, "type": "effect", "label": "Effect"}]},
+        ])
+        self.assertEqual(win.tab_mixer.faders[1].fixture_tag, "YSP01-1:DIM")
+        self.assertEqual(win.tab_mixer.faders[17].fixture_tag, "54X3-1:FX")
+
+        # _on_auto_patch_default points to 4x zzdree-36X
+        tab._on_auto_patch_default()
+        self.assertEqual([f["name"] for f in tab.get_patched_fixtures()], [f"zzdree-36X #{i}" for i in range(1, 5)])
+        win.close()
+
+    def test_dimmerless_3ch_rgb_fixture_scales_rgb_by_intensity(self):
+        """3CH zzdree-36X has no dimmer channel, so _get_target_dmx_for_cue must scale RGB by intensity/255."""
+        self._application()
+        from ui.main_window import MainWindow
+
+        win = MainWindow()
+        win.tab_address._on_patch_zzdree_36x()
+
+        # Full intensity (dimmer=255, active=True)
+        buf_full = win._get_target_dmx_for_cue(
+            {"color": {"R": 200, "G": 100, "B": 50, "W": 0}, "dimmer": 255, "active": True}
+        )
+        for start in (1, 17, 33, 49):
+            self.assertEqual(list(buf_full[start - 1:start + 2]), [200, 100, 50])
+
+        # Partial dimmer (dimmer=128, active=True)
+        buf_half = win._get_target_dmx_for_cue(
+            {"color": {"R": 255, "G": 100, "B": 0, "W": 0}, "dimmer": 128, "active": True}
+        )
+        for start in (1, 17, 33, 49):
+            self.assertEqual(list(buf_half[start - 1:start + 2]), [128, 50, 0])
+
+        # Dimmer zero (dimmer=0, active=True) -> completely off
+        buf_zero = win._get_target_dmx_for_cue(
+            {"color": {"R": 255, "G": 200, "B": 100, "W": 0}, "dimmer": 0, "active": True}
+        )
+        for start in (1, 17, 33, 49):
+            self.assertEqual(list(buf_zero[start - 1:start + 2]), [0, 0, 0])
+
+        # Fade black / inactive cue (active=False) -> completely off even with W>0
+        buf_off = win._get_target_dmx_for_cue(
+            {"color": {"R": 255, "G": 200, "B": 100, "W": 55}, "dimmer": 255, "active": False}
+        )
+        for start in (1, 17, 33, 49):
+            self.assertEqual(list(buf_off[start - 1:start + 2]), [0, 0, 0])
+
+        # Pure white folds into RGB and still scales by dimmer=128
+        buf_white_half = win._get_target_dmx_for_cue(
+            {"color": {"R": 0, "G": 0, "B": 0, "W": 255}, "dimmer": 128, "active": True}
+        )
+        for start in (1, 17, 33, 49):
+            self.assertEqual(list(buf_white_half[start - 1:start + 2]), [128, 128, 128])
+
+        # Mixed rig: fixture WITH dimmer keeps unscaled RGB, fixture WITHOUT dimmer scales RGB
+        for box in win.tab_address.grid_area.boxes.values():
+            box.set_unpatched()
+        win.tab_address._on_fixture_dropped(
+            1,
+            {"name": "Alien-AL36 #1", "channels": [
+                {"type": "dimmer", "label": "Dimmer"},
+                {"type": "red", "label": "Red"},
+                {"type": "green", "label": "Green"},
+                {"type": "blue", "label": "Blue"},
+            ]},
+            notify=False,
+        )
+        win.tab_address._on_fixture_dropped(
+            17,
+            {"name": "zzdree-36X #1", "channels": [
+                {"type": "red", "label": "Red"},
+                {"type": "green", "label": "Green"},
+                {"type": "blue", "label": "Blue"},
+            ]},
+            notify=False,
+        )
+        buf_mixed = win._get_target_dmx_for_cue(
+            {"color": {"R": 200, "G": 100, "B": 0, "W": 0}, "dimmer": 128, "active": True}
+        )
+        self.assertEqual(list(buf_mixed[0:4]), [128, 200, 100, 0])
+        self.assertEqual(list(buf_mixed[16:19]), [100, 50, 0])
+        win.close()
+
+    def test_zzdree_36x_official_showfile_loads_cleanly(self):
+        """Official showfiles/zzdree_36x_4x.zlx patches 4x zzdree-36X at DMX 1, 17, 33, 49."""
+        self._application()
+        from core.project_io import ProjectIO
+        from ui.main_window import MainWindow
+
+        path = BASE_DIR / "showfiles" / "zzdree_36x_4x.zlx"
+        data = ProjectIO.load_project(str(path))
+        self.assertIsNotNone(data)
+        patches = ProjectIO.iter_patches(data)
+        self.assertEqual(len(patches), 4)
+        self.assertEqual([int(p["start_channel"]) for p in patches], [1, 17, 33, 49])
+        for p in patches:
+            self.assertEqual(len(list(ProjectIO.patch_channel_span(p))), 3)
+
+        win = MainWindow()
+        win.load_project_file(str(path), notify=False)
+        patched = win.tab_address.get_patched_fixtures()
+        self.assertEqual(len(patched), 4)
+        self.assertEqual([f["start_channel"] for f in patched], [1, 17, 33, 49])
+        self.assertEqual([f["name"] for f in patched], [f"zzdree-36X #{i}" for i in range(1, 5)])
         win.close()
 
 

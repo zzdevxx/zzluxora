@@ -1,6 +1,6 @@
-# 🎛️ CLAUDE.md — ZZLUXORA v10 (Next-Gen Production Stage Lighting Console)
+# CLAUDE.md | ZZLUXORA v10 (Next-Gen Production Stage Lighting Console)
 
-Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLUXORA v10.0.0** (GrandMA Industrial Console Architecture — Anti-Slop Professional Edition).
+Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLUXORA v10.0.0** (GrandMA Industrial Console Architecture | Anti-Slop Professional Edition).
 
 ---
 
@@ -9,15 +9,16 @@ Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLU
 **Baca `HANDOFF.md` di akar repo lebih dulu.** Dokumen itu memuat status terkini, apa yang sudah selesai (jangan dikerjakan ulang), apa yang belum, jebakan Qt yang harus diketahui, preferensi desain owner, dan lokasi memori.
 
 Perintah wajib:
-```bash
-PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py   # 194 test unik, tanpa popup
-node scripts/check-anti-slop.js --summary                 # ~198 berkas (termasuk non-kode)
-python D:\ANDREAS\agent-memory\tools\memlog.py search "kata kunci"          # memori agen (DB bersama D:\ANDREAS\agent-memory\memlog.db; Linux ASUS: ~/ANDREAS/...)
+```powershell
+# Windows PowerShell (venv Python 3.15.2)
+$env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py   # 197 test unik (166 unittest + 31 pytest), tanpa popup
+node scripts/check-anti-slop.js --summary                                             # audit anti-slop kode dan dokumentasi
+python D:\ANDREAS\PERSONAL\agent-memory\tools\memlog.py search "kata kunci"           # memori agen lintas proyek
 ```
 
 ---
 
-## 📌 1. Ikhtisar & Identitas Proyek
+## 1. Ikhtisar & Identitas Proyek
 
 - **Nama Aplikasi:** **ZZLUXORA** (v10.0.0 Flagship Next-Gen)
 - **Repositori (origin):** `https://gitlab.com/zzdevxx/zzluxora-v10.git` (Branch: `main`); mirror: `codeberg` dan `github`.
@@ -26,14 +27,13 @@ python D:\ANDREAS\agent-memory\tools\memlog.py search "kata kunci"          # me
 - **Institusi:** Program Studi S1 Teknik Komputer, Fakultas Teknik, Universitas Negeri Semarang (UNNES)
 - **Karakter Desain:** Modern-minimalis industri panggung pertunjukan (mengadopsi estetika **grandMA2 / grandMA3 onPC** dan utilitas **QLC+**).
 - **Format Showfile Project:** `.zlx` (JSON showfile).
-- **Format Fixture Profile:** `.zfx` (JSON profil fixture).
 - **Format Profil Fixture:** `.zfx` (JSON profil lampu berstandar QLC+).
 
 ---
 
-## 🏗️ 2. Arsitektur Perangkat Lunak (Clean Modular Architecture — Feedback v3)
+## 2. Arsitektur Perangkat Lunak (Clean Modular Architecture | Feedback v3)
 
-Aplikasi dibangun menggunakan **Python 3.10+** dan **Universal Qt6 Compatibility Layer (`ui/qt_compat.py`)** yang mendukung **PySide6** maupun **PyQt6** secara transparan:
+Aplikasi dibangun menggunakan **Python 3.10+** (runtime aktif `.venv`: **Python 3.15.2** CPython standar) dan **Universal Qt6 Compatibility Layer (`ui/qt_compat.py`)** yang mendukung **PySide6** maupun **PyQt6** secara transparan:
 
 ```text
 zzluxora-v10/
@@ -81,18 +81,22 @@ zzluxora-v10/
 │   ├── TEST_PLAN.md           # Rencana pengujian berjenjang (Unit, SITL, Lapangan)
 │   └── ROADMAP.md             # Rencana aksi eksekusi Big Plan v3 bertahap
 │
-├── fixtures/                  # Preset profil lampu resmi (.zfx saja)
-│   ├── Kumastb-STL47.zfx      # Unit uji bench testing (8CH RGBW)
-│   └── Alien-AL36.zfx         # 4 Unit panggung GIA Deliksari (8CH RGB)
+├── fixtures/                  # 5 Preset profil lampu resmi (.zfx saja)
+│   ├── Alien-AL36.zfx         # 8CH RGB (Dimmer, RGB, Empty, Program, Speed, Emptz)
+│   ├── Illumsolid-YSP01.zfx   # 8CH RGBW (Dimmer, RGBW, Program, Empty, Emptz)
+│   ├── Kumastb-STL47.zfx      # 8CH RGBW (Dimmer, RGBW, Strobe, Program, Speed)
+│   ├── Wisdom-54X3.zfx        # 8CH RGB (Dimmer, Strobe, Effect, Speed, RGB, Empty)
+│   └── zzdree-36X.zfx         # 3CH pure RGB (Red, Green, Blue, tanpa kanal Dimmer)
 │
 ├── showfiles/                 # Berkas pertunjukan live (.zlx) & simulasi (.qxw)
+│   ├── zzdree_36x_4x.zlx      # Showfile resmi aktif 4x zzdree-36X (DMX 1, 17, 33, 49)
 │   ├── demo_church_worship.zlx # Berkas proyek demo resmi (File -> Open Project...)
-│   ├── gia_deliksari_alien_4x.zlx # Showfile resmi 4x Alien AL36 panggung GIA (DMX 1, 17, 33, 49)
-│   ├── bench_kumastb_stl47.zlx # Showfile resmi 1x Kumastb STL47 bench test RGBW (DMX 1)
+│   ├── gia_deliksari_alien_4x.zlx # Showfile 4x Alien AL36 panggung GIA (DMX 1, 17, 33, 49)
+│   ├── bench_kumastb_stl47.zlx # Showfile 1x Kumastb STL47 bench test RGBW (DMX 1)
 │   ├── qlcplus_template.qxw   # Template SITL loopback QLC+ (8CH)
 │   └── zzluxora_test.qxw      # Workspace pengujian visualizer loopback
 │
-├── tests/                     # 15 berkas, 194 test unik (163 unittest + 31 pytest)
+├── tests/                     # 15 berkas, 197 test unik (166 unittest + 31 pytest)
 │   ├── test_fft_engine.py, test_audio_loader.py, test_feature_extractor.py
 │   ├── test_emotion_model.py, test_color_engine.py, test_artnet_sender.py
 │   ├── test_project_io.py, test_ui_components.py, test_audit_regressions.py
@@ -103,65 +107,66 @@ zzluxora-v10/
 
 ---
 
-## 🎨 3. Spesifikasi UI/UX & Standar Mutu (Feedback v3 Full Alignment)
+## 3. Spesifikasi UI/UX & Standar Mutu (Feedback v3 Full Alignment)
 
 1. **Peluncuran Instan (Zero Splashscreen) & Clean Initial State:**
    - Aplikasi terbuka seketika (*instant cold launch* < 500 ms) menyerupai QLC+, tanpa jeda splash screen.
-   - Tampilan awal 100% kosong (*clean blank state* tanpa demo otomatis). Berkas demo mandiri disediakan di `showfiles/demo_church_worship.zlx`.
-2. **Transmisi Art-Net Play-Gated:**
+   - Tampilan awal 100% kosong (*clean blank state* tanpa demo otomatis). Berkas showfile resmi tersedia di `showfiles/zzdree_36x_4x.zlx` dan `showfiles/demo_church_worship.zlx`.
+2. **Transmisi Art-Net Play-Gated & Skalasi Dimmer Fixture 3CH RGB:**
    - Paket UDP Art-Net Port 6454 **HANYA DIKIRIMKAN ketika tombol PLAY aktif** (`is_transmitting == True`). Ketika Play belum ditekan, pergerakan fader hanya memperbarui GUI internal tanpa memancarkan paket ke jaringan.
+   - Pada `_get_target_dmx_for_cue`, fixture tanpa kanal dimmer (seperti `zzdree-36X` 3CH RGB) menskalakan nilai RGB(W) secara proporsional terhadap `intensity / 255.0` sehingga fade black, blackout cue, dan dimmer parsial bekerja penuh tanpa memengaruhi fixture ber-dimmer.
 3. **Hierarki Header Desktop Standar:**
    - **OS Window Title Bar:** Memuat logo resmi `ZZ` (Arial Black Italic, solid black, pure white, no glow) dan judul format bersih: `ZZLUXORA [NamaProject.zlx]`.
-   - **Main Menu Bar (Native QMenuBar):** Pure menu bar (`File`, `Fixture`, `Editor`, `Preview`, `Setting`, `Help`, `About`) tanpa duplikasi logo/nama app di dalamnya.
+   - **Main Menu Bar (Native QMenuBar):** Pure menu bar (`File`, `Fixture`, `Preview`, `Setting`, `Help`, `About`) tanpa duplikasi logo/nama app di dalamnya.
    - **Program View Bar:** Sisi kiri memuat 6 tab workspace, sisi kanan memuat badge status Art-Net (klik membuka Setting), tombol Blackout, dan tombol Play/Stop toggle.
 4. **Desain Anti-Slop (No Emojis & Industrial Console Look):**
    - Bebas dari emoji di tombol/header.
-   - Menggunakan pemisah teknis standar konsol: pipa `|` atau titik dua `:`, tanpa em-dash dekoratif `—`.
-   - Kode channel visual di Tab Address: `DIM`, `RED`, `GRN`, `BLU`, `WHT`, `STR`.
+   - Menggunakan pemisah teknis standar konsol: pipa `|` atau titik dua `:`, tanpa em-dash dekoratif.
+   - Kode channel visual di Tab Address: `DIM`, `RED`, `GRN`, `BLU`, `WHT`, `STR`, `FX`.
 5. **Jendela Pop-up Mandiri (Floating Windows):**
    - `Fixture List`, `Fixture Editor`, `Stage Visualizer (2D & 3D Perspective with Volumetric Beams & Haze/Smoke FX)`, `Settings`, `Help`, `About` adalah jendela pop-up non-modal independen dengan kontrol *Minimize, Maximize, Close*.
 6. **Enam Tab Utama Program (Workspaces):**
-   - `Tab 1: Address`: Grid 512 kanal DMX (20 kolom horizontal, warna sel mengikuti tipe kanal, Clear All dengan konfirmasi, Undo `Ctrl+Z` / Redo `Ctrl+Shift+Z`, satu tombol `PATCH` dengan pilihan preset 4x Alien-AL36 (GIA, DMX001/017/033/049) atau 1x Kumastb-STL47 (bench, DMX001)).
+   - `Tab 1: Address`: Grid 512 kanal DMX (20 kolom horizontal, warna sel mengikuti tipe kanal, Clear All dengan konfirmasi, Undo `Ctrl+Z` / Redo `Ctrl+Shift+Z`, tombol `PATCH` langsung memasang 4x `zzdree-36X` 3CH RGB pada DMX001/017/033/049 = 12 kanal total).
    - `Tab 2: Analyze`: Audio file loader, YouTube audio downloader & converter otomatis, tombol Analyze & Remove, analisis asinkron non-blocking dengan efek blur/dimmed pada area analisis dan tips saintifik DSP.
    - `Tab 3: Result`: Dashboard metrik analisis lengkap (12 parameter: RMS Energy, Spectral Centroid Hz, Chroma STFT 12-Semitone + Deteksi Tonalitas Mayor/Minor, MFCC Density, Spectral Flux, Russell 2D V-A plane, BPM, kuadran mood Praise/Worship, dan Dekomposisi Physical RGBW).
    - `Tab 4: Perform`: Manajemen urutan playlist pertunjukan panggung, auto-populate section cues lagu (Intro/Verse/Chorus/Bridge/Ending), master playback `[GO+]`, `[PREV]`, `[FADE BLACK]`, dan smooth cosine crossfading.
    - `Tab 5: Page`: Lembar tombol virtual executor untuk eksekusi instan suasana panggung (Praise, Worship, Strobe Flash).
-   - `Tab 6: Mixer`: Meja 513 fader fisik dengan Grand Master fader lebih tinggi & dominan (230px, 68px), tombol cepat `[✕]` clear/zero pada setiap fader, bilah navigasi lompat cepat Bank Fader 1 s.d. 8, *tactile ribbed cap*, *illuminated groove rail* dengan LED menyala di belakang fader, dan garis skala kalibrasi analog.
+   - `Tab 6: Mixer`: Meja 513 fader fisik dengan Grand Master fader lebih tinggi & dominan (230px, 68px), tombol cepat `[x]` clear/zero pada setiap fader, bilah navigasi lompat cepat Bank Fader 1 s.d. 8, tag fader ringkas (`36X-1:RED`, `AL36-1:DIM`, `YSP01-1:DIM`, `54X3-1:FX`), *tactile ribbed cap*, *illuminated groove rail*, dan garis skala kalibrasi analog.
 
 ---
 
-## 💻 4. Kompatibilitas Multi-Platform & Responsivitas Layar
+## 4. Kompatibilitas Multi-Platform & Responsivitas Layar
 
-- **Development saat ini:** Linux Mint (Laptop ASUS X407MA, 1366×768).
-- **Target Deployment:** Windows 11 (Laptop Acer Swift 3 di ruang server/panggung, 1920×1080).
+- **Development & Deployment Utama:** Windows 11 (Laptop Acer Swift 3, `D:\ANDREAS\PERSONAL\zzluxora-v10`, 1920x1080, `.venv` Python 3.15.2).
+- **Kompatibilitas Layar Kecil (768p):** Tetap terjaga untuk resolusi 1366x768.
 - **Aturan Sizing Responsif:**
-  * Default window size: `1200 × 680` px (pas di layar 768p tanpa terpotong panel OS).
-  * Minimum window size: `960 × 560` px.
+  * Default window size: `1200 x 680` px (pas di layar 768p tanpa terpotong panel OS).
+  * Minimum window size: `960 x 560` px.
   * Tinggi fader disesuaikan ke `190px` (lebar `52px`) agar pas dan padat di 768p dan meregang elastis di 1080p.
-  * Sel grid DMX berukuran `46×46px` (20 kolom = 920px, muat lega di layar 1366px).
+  * Sel grid DMX berukuran `46x46px` (20 kolom = 920px, muat lega di layar 1366px).
 
 ---
 
-## 🔄 5. Disiplin Git & Sinkronisasi
+## 5. Disiplin Git & Sinkronisasi
 
 1. Repositori GitLab `zzdevxx/zzluxora-v10` dan `zzdevxx/zzluxora-thesis` (origin) adalah **Single Source of Truth**; Codeberg dan GitHub adalah mirror.
-2. Setiap fitur yang selesai diuji wajib di-commit dan di-push ke branch `main`.
-3. Di laptop utama, sinkronisasi dilakukan hanya dengan `git pull origin main`.
+2. Setiap fitur yang selesai diuji wajib di-commit dan di-push ke branch `main` menggunakan `sync_cloud.py` saat pemilik meminta sinkronisasi.
+3. Jangan commit atau push tanpa konfirmasi pemilik.
 
 ---
 
-## 🎛️ 6. Design System Impeccable & Status Pengujian
+## 6. Design System Impeccable & Status Pengujian
 
 **Integrasi Impeccable Design System (7 Okt 2026, commit `f938987`):**
-- `PRODUCT.md` (akar repo): kebenaran produk tahan-lama skema Impeccable 1 — platform desktop, pengguna LD/FOH, mode *operate*, komitmen merek industrial, prinsip produk.
+- `PRODUCT.md` (akar repo): kebenaran produk tahan-lama skema Impeccable 1 | platform desktop, pengguna LD/FOH, mode *operate*, komitmen merek industrial, prinsip produk.
 - `DESIGN.md` (akar repo): spesifikasi sistem desain bertoken (YAML frontmatter) dengan Creative North Star **"The Obsidian Control Deck"**, *10% accent rule*, skala tipografi 4-tier ber-`tabular-nums`, matriks 7-state interaktif, dan aturan anti-slop.
 - `markdowns/DESIGN.md`: ringkasan token untuk kerja UI harian.
 
 **Aturan kerja wajib untuk agent:**
-1. **Semua warna UI wajib dari token `Theme` di `ui/styles.py`** — hex inline dilarang (hanya `ui/styles.py` dan `ui/icons.py` yang boleh memuat literal hex).
-2. **Anti-slop keras:** tanpa emoji di chrome UI, tanpa em-dash/en-dash (`|` atau `-`), tanpa glow/cyberpunk palsu, tanpa biru web generik untuk aksi utama (hijau `#16a34a` / amber / cyan sesuai `DESIGN.md`).
-3. **Kontras WCAG:** teks pada fill channel terang (amber, cyan, yellow, dll) wajib pakai `Theme.SURFACE_VOID`; gelap → `Theme.TEXT_PRIMARY`. Peta lengkap di `ui/panels/address_tab.py::update_style`.
-4. **Test wajib sebelum commit:** `PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py` → saat ini **194 test unik lulus** (163 unittest + 31 pytest). Wrapper ini menetralkan QMessageBox/QFileDialog/QInputDialog lebih dulu sehingga tidak ada popup yang muncul di layar operator saat pengujian. Perintah lama `python3 -m unittest discover -s tests -p "test_*.py"` masih sah, tetapi **dapat memunculkan popup "Project Saved"** karena beberapa jalur menyimpan berkas. Audit anti-slop: 0 em-dash, 0 emoji, 0 inline hex di luar token/ikon.
-5. **Ditunda:** *Live Cue Ribbon* (swatch RGBW + pan/tilt per cue) — menunggu arahan owner.
+1. **Semua warna UI wajib dari token `Theme` di `ui/styles.py`** | hex inline dilarang (hanya `ui/styles.py` dan `ui/icons.py` yang boleh memuat literal hex).
+2. **Anti-slop keras:** tanpa emoji di chrome UI dan heading, tanpa em-dash/en-dash (`|` atau `-`), tanpa glow/cyberpunk palsu, tanpa biru web generik untuk aksi utama (hijau `#16a34a` / amber / cyan sesuai `DESIGN.md`).
+3. **Kontras WCAG:** teks pada fill channel terang (amber, cyan, yellow, dll) wajib pakai `Theme.SURFACE_VOID`; gelap -> `Theme.TEXT_PRIMARY`. Peta lengkap di `ui/panels/address_tab.py::update_style`.
+4. **Test wajib sebelum commit:** `$env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py` -> saat ini **197 test unik lulus** (166 unittest + 31 pytest, exit 0). Wrapper ini menetralkan QMessageBox/QFileDialog/QInputDialog lebih dulu sehingga tidak ada popup yang muncul di layar operator saat pengujian. Perintah lama `python -m unittest discover -s tests -p "test_*.py"` tidak direkomendasikan karena dapat memunculkan popup dialog. Audit anti-slop: 0 error, 0 warning.
+5. **Ditunda:** *Live Cue Ribbon* (swatch RGBW + pan/tilt per cue) menunggu arahan owner.
 
-**Status uji terakhir:** 194 test unik OK (163 unittest + 31 pytest) · CLI Art-Net exit 0 · audit anti-slop bersih · jalankan via `tools/run_tests_guarded.py` agar tidak ada popup yang muncul saat pengujian.
+**Status uji terakhir:** 197 test unik OK (166 unittest [1 skipped] + 31 pytest) | Python 3.15.2 `.venv` | audit anti-slop bersih (0 error, 0 warning) | jalankan via `tools/run_tests_guarded.py`.

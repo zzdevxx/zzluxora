@@ -232,7 +232,7 @@ class TestFixtureNameStandard(unittest.TestCase):
     checked the names themselves.
     """
 
-    OFFICIAL = {"Alien-AL36", "Kumastb-STL47"}
+    OFFICIAL = {"Alien-AL36", "Illumsolid-YSP01", "Kumastb-STL47", "Wisdom-54X3", "zzdree-36X"}
     BANNED = ("(8CH", "(8ch", "RGBW)", "rgbw)", " 8CH")
 
     def test_official_fixture_profiles_use_the_standard_names(self):
@@ -270,6 +270,13 @@ class TestFixtureNameStandard(unittest.TestCase):
             win.tab_address._on_patch_kuma_bench()
             kuma = {f["name"] for f in win.tab_address.get_patched_fixtures()}
             self.assertIn("Kumastb-STL47", kuma)
+
+            win.tab_address._on_patch_zzdree_36x()
+            zzdree_names = {f["name"] for f in win.tab_address.get_patched_fixtures()}
+            self.assertEqual(zzdree_names, {f"zzdree-36X #{i}" for i in range(1, 5)})
+            for name in zzdree_names:
+                for bad in self.BANNED:
+                    self.assertNotIn(bad, name, f"{name!r} still carries the banned qualifier {bad!r}")
         finally:
             win.close()
 
