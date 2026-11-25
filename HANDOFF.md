@@ -26,7 +26,7 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 
 | | |
 |---|---|
-| Software `zzdevxx/zzluxora` (ex `zzluxora-v10`) | Versi lokal `v10.1` (`10.1.0`), installer dibangun; publikasi GitHub Release masih menunggu |
+| Software `zzdevxx/zzluxora` (ex `zzluxora-v10`) | GitHub Release `v10.1` (`10.1.0`) terbit; installer dan manifest cocok dengan aset rilis |
 | Naskah `zzdevxx/zzluxora-thesis` | HEAD **`b2fbbc7`**, bersih, sinkron (Bab 4 & 5 naskah v5 terisi data empiris) |
 | Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`cddd36f`**, bersih, sinkron (firmware v5.0.0 pacing absolut 43.07 FPS & packet counter) |
 | Test suite | **206 test unik terkumpul** (175 unittest + 31 pytest; 205 lulus, 1 dilewati), exit 0 |
