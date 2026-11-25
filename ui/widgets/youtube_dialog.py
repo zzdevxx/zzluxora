@@ -12,6 +12,7 @@ from ui.qt_compat import (
     QPushButton, QProgressBar, QMessageBox, QWidget, Qt, Signal, QThread
 )
 from ui.styles import Theme, CONSOLE_QSS
+from core.paths import writable_audio_dir
 from core import youtube_importer as yt
 
 
@@ -57,10 +58,8 @@ class YouTubeDialog(QDialog if HAS_QT else object):
         self.setMinimumSize(560, 320)
         self.setStyleSheet(CONSOLE_QSS)
 
-        # Derive from the repository location rather than a fixed home path, so
-        # the dialog works on the Windows build machine as well as on Linux.
-        repo_root = Path(__file__).resolve().parents[2]
-        self.output_dir = repo_root / "data" / "audio"
+        # Resolve writable audio dir (LocalAppData when frozen, data/audio in dev).
+        self.output_dir = writable_audio_dir()
         self.worker: YouTubeDownloaderWorker | None = None
 
         self._init_ui()

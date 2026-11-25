@@ -15,7 +15,11 @@ from ui.qt_compat import (
     QComboBox, QFileDialog, QMessageBox, QHeaderView,
     Qt, QAction, QKeySequence, QFont, QColor, QIcon
 )
-from core.paths import fixtures_dir as project_fixtures_dir
+from core.paths import (
+    asset_path,
+    fixtures_dir as project_fixtures_dir,
+    writable_fixtures_dir,
+)
 from ui.styles import Theme, CONSOLE_QSS
 
 
@@ -57,7 +61,7 @@ class FixtureEditorWindow(QMainWindow if HAS_QT else object):
         self.resize(680, 560)
         self.setStyleSheet(CONSOLE_QSS)
 
-        logo_path = Path(__file__).resolve().parent.parent / "assets" / "logo_zz.png"
+        logo_path = asset_path("logo_zz.png")
         if logo_path.exists():
             self.setWindowIcon(QIcon(str(logo_path)))
 
@@ -485,10 +489,12 @@ class FixtureEditorWindow(QMainWindow if HAS_QT else object):
         self._mark_clean()
 
     def _on_open_file(self) -> None:
+        user_dir = writable_fixtures_dir()
+        open_dir = user_dir if any(user_dir.glob("*.zfx")) else project_fixtures_dir()
         path, _ = QFileDialog.getOpenFileName(
             self,
             "Open Fixture Profile",
-            str(project_fixtures_dir()),
+            str(open_dir),
             "ZZLUXORA Fixture (*.zfx)",
         )
         if not path: return
@@ -522,7 +528,7 @@ class FixtureEditorWindow(QMainWindow if HAS_QT else object):
             self._on_save_as_file()
 
     def _on_save_as_file(self) -> None:
-        default_dir = project_fixtures_dir()
+        default_dir = writable_fixtures_dir()
         default_dir.mkdir(parents=True, exist_ok=True)
         model_name = self.txt_model.text().strip() or "new_fixture"
         default_name = f"{model_name.lower().replace(' ', '_')}.zfx"

@@ -17,6 +17,7 @@ from ui.qt_compat import (
     QProgressBar, QFileDialog, QMessageBox, Qt, Signal, QThread,
 )
 from ui.styles import Theme, CONSOLE_QSS
+from core.paths import ensure as ensure_dir, writable_audio_dir
 from core.song_library import SongLibrary
 from core.audio_loader import AudioLoader
 
@@ -167,7 +168,8 @@ class AddSongDialog(QDialog if HAS_QT else object):
         layout.addWidget(btn_close, alignment=Qt.AlignRight)
 
     def _on_browse_local(self) -> None:
-        init_dir = str(Path("data/audio").resolve()) if Path("data/audio").exists() else ""
+        audio_root = writable_audio_dir()
+        init_dir = str(audio_root) if audio_root.exists() else ""
         path, _ = QFileDialog.getOpenFileName(
             self,
             "Select Audio File",
@@ -199,8 +201,7 @@ class AddSongDialog(QDialog if HAS_QT else object):
             QMessageBox.warning(self, "Invalid URL", "Please enter a valid YouTube URL.")
             return
 
-        out_dir = Path("data/audio").resolve()
-        out_dir.mkdir(parents=True, exist_ok=True)
+        out_dir = ensure_dir(writable_audio_dir())
 
         self.btn_dl_yt.setEnabled(False)
         self.prog_bar.setValue(5)

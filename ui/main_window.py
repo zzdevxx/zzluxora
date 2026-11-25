@@ -18,7 +18,12 @@ from ui.qt_compat import (
     QAction, QKeySequence, QIcon, QPixmap
 )
 
-from core.paths import ensure as ensure_dir, showfiles_dir as project_showfiles_dir
+from core.paths import (
+    asset_path,
+    ensure as ensure_dir,
+    showfiles_dir as project_showfiles_dir,
+    writable_showfiles_dir,
+)
 from ui.styles import Theme, CONSOLE_QSS
 from ui.panels.address_tab import AddressTab
 from ui.panels.analyze_tab import AnalyzeTab
@@ -37,6 +42,7 @@ from core.artnet_sender import ArtNetSender
 from core.models import ProjectState
 from core.project_io import ProjectIO
 from core.song_library import SongLibrary
+from core.version import APP_VERSION
 
 
 class MainWindow(QMainWindow if HAS_QT else object):
@@ -53,7 +59,7 @@ class MainWindow(QMainWindow if HAS_QT else object):
         self.setStyleSheet(CONSOLE_QSS)
 
         # Set Window and Taskbar Icon
-        logo_path = Path(__file__).resolve().parent / "assets" / "logo_zz.png"
+        logo_path = asset_path("logo_zz.png")
         if logo_path.exists():
             self.setWindowIcon(QIcon(str(logo_path)))
 
@@ -791,11 +797,13 @@ class MainWindow(QMainWindow if HAS_QT else object):
             QMessageBox.critical(self, "Open Error", f"Failed to load project file:\n{e}")
 
     def _on_open_project(self) -> None:
-        showfiles_dir = ensure_dir(project_showfiles_dir())
+        user_dir = ensure_dir(writable_showfiles_dir())
+        has_user_files = any(user_dir.glob("*.zlx"))
+        browse_dir = user_dir if has_user_files else project_showfiles_dir()
         path, _ = QFileDialog.getOpenFileName(
             self,
             "Open ZZLUXORA Project",
-            str(showfiles_dir),
+            str(browse_dir),
             "ZZLUXORA Project (*.zlx)",
         )
         if path:
@@ -808,7 +816,7 @@ class MainWindow(QMainWindow if HAS_QT else object):
             self._save_to_path(self.current_project_path)
 
     def _on_save_as_project(self) -> None:
-        showfiles_dir = ensure_dir(project_showfiles_dir())
+        showfiles_dir = ensure_dir(writable_showfiles_dir())
         path, _ = QFileDialog.getSaveFileName(
             self,
             "Save ZZLUXORA Project",
@@ -849,7 +857,7 @@ class MainWindow(QMainWindow if HAS_QT else object):
 
             data = {
                 "app": "ZZLUXORA",
-                "version": "10.0.0",
+                "version": APP_VERSION,
                 "project_name": Path(path).stem,
                 "target_ip": self.target_ip,
                 "port": self.target_port,

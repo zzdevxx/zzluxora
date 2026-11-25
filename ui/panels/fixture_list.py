@@ -12,7 +12,11 @@ from ui.qt_compat import (
     QListWidget, QListWidgetItem, QSplitter, QTextEdit, QIcon,
     Qt, QMimeData, QPoint, QDrag, QFont
 )
-from core.paths import fixtures_dir as project_fixtures_dir
+from core.paths import (
+    asset_path,
+    fixtures_dir as project_fixtures_dir,
+    writable_fixtures_dir,
+)
 from ui.styles import Theme, CONSOLE_QSS
 
 
@@ -50,10 +54,11 @@ class FixtureListWindow(QWidget if HAS_QT else object):
         self.resize(520, 480)
         self.setStyleSheet(CONSOLE_QSS)
 
-        logo_path = Path(__file__).resolve().parent.parent / "assets" / "logo_zz.png"
+        logo_path = asset_path("logo_zz.png")
         if logo_path.exists():
             self.setWindowIcon(QIcon(str(logo_path)))
 
+        self._custom_fixtures_dir = fixtures_dir
         self.fixtures_dir = fixtures_dir or (project_fixtures_dir())
         self._init_ui()
         self.reload_fixtures()
@@ -125,12 +130,23 @@ class FixtureListWindow(QWidget if HAS_QT else object):
 
     def reload_fixtures(self) -> None:
         self.list_widget.clear()
-        if not self.fixtures_dir.exists():
-            return
+        search_dirs = [self.fixtures_dir]
+        if self._custom_fixtures_dir is None:
+            extra_dir = writable_fixtures_dir()
+            if extra_dir.resolve() != self.fixtures_dir.resolve():
+                search_dirs.append(extra_dir)
 
-        # Strictly load official .zfx fixture definitions
-        files = sorted(list(self.fixtures_dir.glob("*.zfx")))
-        for f in files:
+        seen: set[str] = set()
+        files = []
+        for directory in search_dirs:
+            if not directory.exists():
+                continue
+            for f in sorted(directory.glob("*.zfx")):
+                if f.name not in seen:
+                    seen.add(f.name)
+                    files.append(f)
+
+        for f in sorted(files, key=lambda p: p.name.lower()):
             try:
                 with open(f, "r", encoding="utf-8") as fp:
                     data = json.load(fp)

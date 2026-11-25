@@ -6,6 +6,8 @@ Displays the comprehensive console shortcuts table.
 from __future__ import annotations
 from pathlib import Path
 
+from core.paths import asset_path
+
 from ui.qt_compat import (
     HAS_QT, QDialog, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox, Qt, QColor, QFont, QIcon
@@ -23,7 +25,7 @@ class HelpDialog(QDialog if HAS_QT else object):
         self.resize(580, 480)
         self.setStyleSheet(CONSOLE_QSS)
 
-        logo_path = Path(__file__).resolve().parent.parent / "assets" / "logo_zz.png"
+        logo_path = asset_path("logo_zz.png")
         if logo_path.exists():
             self.setWindowIcon(QIcon(str(logo_path)))
 

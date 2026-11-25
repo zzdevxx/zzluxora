@@ -1,6 +1,6 @@
-# CLAUDE.md | ZZLUXORA v10 (Next-Gen Production Stage Lighting Console)
+# CLAUDE.md | ZZLUXORA (Production Stage Lighting Console)
 
-Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLUXORA v10.0.0** (GrandMA Industrial Console Architecture | Anti-Slop Professional Edition).
+Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLUXORA** (mulai rilis `v10.0` / `10.0.0`, skema inkremental `+0.1`; GrandMA Industrial Console Architecture | Anti-Slop Professional Edition).
 
 ---
 
@@ -20,8 +20,8 @@ python D:\ANDREAS\PERSONAL\agent-memory\tools\memlog.py search "kata kunci"     
 
 ## 1. Ikhtisar & Identitas Proyek
 
-- **Nama Aplikasi:** **ZZLUXORA** (v10.0.0 Flagship Next-Gen)
-- **Repositori (origin):** `https://gitlab.com/zzdevxx/zzluxora-v10.git` (Branch: `main`); mirror: `codeberg` dan `github`.
+- **Nama Aplikasi:** **ZZLUXORA** (`core/version.py`: `v10.0` / `10.0.0`, naik `+0.1` tiap rilis)
+- **Repositori (origin):** `https://gitlab.com/zzdevxx/zzluxora.git` (Branch: `main`); mirror: `codeberg` dan `github`. Portal unduhan: `https://zzdree.my.id/zzluxora/` (`zzdevxx/zzluxora-download`).
 - **Peneliti / Pengembang:** Andreas Restuawanta Christwara (`NIM: 5312422036`)
 - **Dosen Pembimbing:** Mario Norman Syah, S.Pd., M.Eng.
 - **Institusi:** Program Studi S1 Teknik Komputer, Fakultas Teknik, Universitas Negeri Semarang (UNNES)
@@ -36,7 +36,7 @@ python D:\ANDREAS\PERSONAL\agent-memory\tools\memlog.py search "kata kunci"     
 Aplikasi dibangun menggunakan **Python 3.10+** (runtime aktif `.venv`: **Python 3.15.2** CPython standar) dan **Universal Qt6 Compatibility Layer (`ui/qt_compat.py`)** yang mendukung **PySide6** maupun **PyQt6** secara transparan:
 
 ```text
-zzluxora-v10/
+zzluxora/
 ├── core/                      # PURE PYTHON ENGINE (ZERO-GUI DEPENDENCY)
 │   ├── __init__.py
 │   ├── audio_loader.py        # Pemuat audio multi-format (.wav, .mp3, .flac, .ogg)
@@ -137,7 +137,7 @@ zzluxora-v10/
 
 ## 4. Kompatibilitas Multi-Platform & Responsivitas Layar
 
-- **Development & Deployment Utama:** Windows 11 (Laptop Acer Swift 3, `D:\ANDREAS\PERSONAL\zzluxora-v10`, 1920x1080, `.venv` Python 3.15.2).
+- **Development & Deployment Utama:** Windows 11 (Laptop Acer Swift 3, `D:\ANDREAS\PERSONAL\zzluxora`, 1920x1080, `.venv` Python 3.15.2).
 - **Kompatibilitas Layar Kecil (768p):** Tetap terjaga untuk resolusi 1366x768.
 - **Aturan Sizing Responsif:**
   * Default window size: `1200 x 680` px (pas di layar 768p tanpa terpotong panel OS).
@@ -149,7 +149,7 @@ zzluxora-v10/
 
 ## 5. Disiplin Git & Sinkronisasi
 
-1. Repositori GitLab `zzdevxx/zzluxora-v10` dan `zzdevxx/zzluxora-thesis` (origin) adalah **Single Source of Truth**; Codeberg dan GitHub adalah mirror.
+1. Repositori GitLab `zzdevxx/zzluxora` dan `zzdevxx/zzluxora-thesis` (origin) adalah **Single Source of Truth**; Codeberg dan GitHub adalah mirror. Verifikasi paritas 4-repo dijalankan lewat `python tools/verify_ecosystem.py`.
 2. Setiap fitur yang selesai diuji wajib di-commit dan di-push ke branch `main` menggunakan `sync_cloud.py` saat pemilik meminta sinkronisasi.
 3. Jangan commit atau push tanpa konfirmasi pemilik.
 

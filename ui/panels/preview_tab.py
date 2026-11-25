@@ -11,6 +11,8 @@ import math
 import random
 from pathlib import Path
 
+from core.paths import asset_path
+
 from ui.qt_compat import (
     HAS_QT, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QFrame, QSpinBox, QSlider, QStackedWidget,
@@ -933,7 +935,7 @@ class StageVisualizerWindow(QWidget if HAS_QT else object):
         self.resize(920, 600)
         self.setStyleSheet(CONSOLE_QSS)
 
-        logo_path = Path(__file__).resolve().parent.parent / "assets" / "logo_zz.png"
+        logo_path = asset_path("logo_zz.png")
         if logo_path.exists():
             self.setWindowIcon(QIcon(str(logo_path)))
 

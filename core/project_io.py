@@ -16,6 +16,8 @@ import json
 import os
 from typing import Any, Dict, List, Optional
 
+from core.version import APP_NAME, APP_VERSION
+
 
 class ProjectIO:
     """
@@ -23,8 +25,8 @@ class ProjectIO:
     """
 
     FILE_EXTENSION = ".zlx"
-    VERSION = "10.0.0"
-    APP_ID = "ZZLUXORA"
+    VERSION = APP_VERSION
+    APP_ID = APP_NAME
 
     @staticmethod
     def _generic_8ch_patch(start_channel: int, model: str) -> Dict[str, Any]:

@@ -26,7 +26,7 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 
 | | |
 |---|---|
-| Software `zzdevxx/zzluxora-v10` | HEAD **`1d28bf8`**, working tree **bersih**, sinkron `origin/main` |
+| Software `zzdevxx/zzluxora` (ex `zzluxora-v10`) | Portal **`https://zzdree.my.id/zzluxora/`**, versi inkremental `+0.1` mulai `v10.0` (`10.0.0`) |
 | Naskah `zzdevxx/zzluxora-thesis` | HEAD **`b2fbbc7`**, bersih, sinkron (Bab 4 & 5 naskah v5 terisi data empiris) |
 | Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`cddd36f`**, bersih, sinkron (firmware v5.0.0 pacing absolut 43.07 FPS & packet counter) |
 | Test suite | **194 test unik lulus** (163 unittest + 31 pytest), exit 0 · jumlah wajib diperiksa, lihat §2c |
@@ -40,7 +40,7 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 ### Perintah wajib
 
 ```bash
-cd D:\ANDREAS\zzluxora-v10    # Linux ASUS: cd ~/ANDREAS/zzluxora-v10
+cd D:\ANDREAS\PERSONAL\zzluxora    # Linux ASUS: cd ~/ANDREAS/zzluxora
 
 # uji Smart Context-Aware Undo/Redo (QLC+ & grandMA style)
 python3 tools/test_global_undo_redo.py
@@ -314,8 +314,9 @@ Dua butir dari feedback 16 Okt **belum** tuntas:
   untuk memeriksa status bahan; `--manifest` untuk mengunduh lagu nyata dengan
   sidecar provenance. Belum dipakai karena daftar lagu belum ditetapkan owner.
 - Olah data lapangan: `script/tools/analyze_field_data.py` (CSV 41 kolom → tabel
-  Bab 4). **Perhatikan:** alat ini ada di repo **zzluxora-thesis**, bukan `zzluxora-v10`.
-- Bridge korelasi fitur audio: `zzluxora-v10/tools/export_correlation.py`.
+  Bab 4). **Perhatikan:** alat ini ada di repo **zzluxora-thesis**, bukan `zzluxora`.
+- Bridge korelasi fitur audio: `zzluxora/tools/export_correlation.py`.
+- Verifikasi ekosistem 4 repo & manifest unduhan: `zzluxora/tools/verify_ecosystem.py`.
 
 ### Sisa temuan low (belum ditindak)
 Tidak ada yang mendesak. Beberapa `except Exception: pass` yang sengaja (probe opsional, tutup socket) versus satu yang bermasalah (`audio_loader.py:109` menelan kegagalan decode lalu pindah format diam-diam).

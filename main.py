@@ -1,5 +1,5 @@
 """
-ZZLUXORA v10.0.0 - Flagship Stage Lighting Control & Autonomous Audio-Reactive Engine
+ZZLUXORA - Flagship Stage Lighting Control & Autonomous Audio-Reactive Engine
 Developed for S1 Teknik Komputer FT Universitas Negeri Semarang (UNNES).
 Peneliti: Andreas Restuawanta Christwara (NIM: 5312422036)
 Dosen Pembimbing: Mario Norman Syah, S.Pd., M.Eng.
@@ -11,6 +11,9 @@ import os
 import sys
 import time
 from pathlib import Path
+
+from core.paths import asset_path
+from core.version import APP_VERSION
 
 # Ensure root directory in sys.path
 BASE_DIR = Path(__file__).resolve().parent
@@ -31,7 +34,7 @@ from core import (
 def run_cli_demo(target_ip: str = "127.0.0.1", duration: float = 3.0) -> None:
     """Runs a standalone demonstration of the core FFT & Art-Net lighting engine."""
     print("=" * 70)
-    print("ZZLUXORA v10.0.0 - CORE ENGINE STANDALONE RUNTIME")
+    print(f"ZZLUXORA v{APP_VERSION} - CORE ENGINE STANDALONE RUNTIME")
     print("   Autonomous Audio-Reactive Stage Lighting Architecture")
     print("=" * 70)
     print(f"Target Art-Net Node IP : {target_ip}:6454 (Universe 0)")
@@ -79,7 +82,7 @@ def run_cli_demo(target_ip: str = "127.0.0.1", duration: float = 3.0) -> None:
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="ZZLUXORA v10 Stage Lighting Control Console")
+    parser = argparse.ArgumentParser(description=f"ZZLUXORA v{APP_VERSION} Stage Lighting Control Console")
     parser.add_argument("--cli", action="store_true", help="Run standalone CLI engine demonstration")
     parser.add_argument("--ip", type=str, default="127.0.0.1", help="Target Art-Net node IP (default: 127.0.0.1)")
     parser.add_argument("--duration", type=float, default=4.0, help="Demo duration in seconds")
@@ -102,7 +105,7 @@ def main(argv: list[str] | None = None) -> None:
                 raise ImportError("No Qt binding available")
             from ui.main_window import MainWindow
             app = QApplication(sys.argv)
-            logo_path = BASE_DIR / "ui" / "assets" / "logo_zz.png"
+            logo_path = asset_path("logo_zz.png")
             if logo_path.exists():
                 app.setWindowIcon(QIcon(str(logo_path)))
             window = MainWindow()

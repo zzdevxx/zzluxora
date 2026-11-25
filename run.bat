@@ -1,6 +1,6 @@
 @echo off
 :: ==============================================================================
-:: ZZLUXORA v10.0.0 — One-Click Stage Lighting Console Launcher (Windows 11)
+:: ZZLUXORA v10.0 - One-Click Stage Lighting Console Launcher (Windows 11)
 :: ==============================================================================
 
 cd /d "%~dp0"

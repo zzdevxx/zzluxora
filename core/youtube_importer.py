@@ -87,6 +87,16 @@ YTDLP_MIN_VERSION = (2025, 1)
 
 def yt_dlp_version(command: Sequence[str]) -> Optional[tuple]:
     """Return the yt-dlp version as a (year, month) tuple, or None."""
+    if list(command) == ["__inprocess_yt_dlp__"]:
+        try:
+            import yt_dlp  # type: ignore
+
+            raw_ver = str(getattr(yt_dlp.version, "__version__", "")).strip()
+            parts = raw_ver.split(".")
+            return (int(parts[0]), int(parts[1]))
+        except Exception:
+            return None
+
     try:
         result = subprocess.run(
             [*command, "--version"],
@@ -112,12 +122,15 @@ def yt_dlp_version(command: Sequence[str]) -> Optional[tuple]:
 def resolve_yt_dlp_command() -> Optional[List[str]]:
     """Return the command prefix used to invoke yt-dlp.
 
-    Prefers the yt-dlp Python package (so the version tracks requirements.txt),
-    then falls back to a system binary.
+    Prefers the yt-dlp Python package (in-process when frozen so the bundled
+    executable never spawns itself infinitely, or ``sys.executable -m yt_dlp``
+    in dev mode), then falls back to a system binary.
     """
     try:
         import yt_dlp  # type: ignore  # noqa: F401
 
+        if getattr(sys, "frozen", False):
+            return ["__inprocess_yt_dlp__"]
         return [sys.executable, "-m", "yt_dlp"]
     except Exception:
         pass
@@ -229,37 +242,61 @@ def download_and_convert(
     before = _snapshot(output_dir)
 
     emit(25, "Downloading audio stream...")
-    download_command = [
-        *yt_command,
-        "-f", "bestaudio/best",
-        "--no-playlist",
-        "--no-part",
-        "--newline",
-        "-o", str(output_dir / "%(title)s.%(ext)s"),
-        url,
-    ]
-    try:
-        download = subprocess.run(
-            download_command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            timeout=DOWNLOAD_TIMEOUT_SEC,
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise YouTubeImportError(
-            f"Download timed out after {DOWNLOAD_TIMEOUT_SEC // 60} minutes. "
-            "Check the network connection and try again."
-        ) from exc
-    except OSError as exc:
-        raise YouTubeImportError(f"Could not start yt-dlp: {exc}") from exc
+    if list(yt_command) == ["__inprocess_yt_dlp__"]:
+        try:
+            import yt_dlp  # type: ignore
 
-    if download.returncode != 0:
-        tail = (download.stderr or download.stdout or "").strip().splitlines()
-        detail = tail[-1] if tail else "no diagnostics"
-        if "Sign in" in detail or "bot" in detail.lower():
-            detail += " (YouTube may be challenging this request; try updating yt-dlp)"
-        raise YouTubeImportError(f"Download failed: {detail}")
+            ydl_opts = {
+                "format": "bestaudio/best",
+                "noplaylist": True,
+                "nopart": True,
+                "outtmpl": str(output_dir / "%(title)s.%(ext)s"),
+                "quiet": True,
+                "no_warnings": True,
+            }
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ret = ydl.download([url])
+            if ret not in (0, None):
+                raise YouTubeImportError(f"Download failed (yt-dlp exited with code {ret}).")
+        except YouTubeImportError:
+            raise
+        except Exception as exc:
+            detail = str(exc).strip() or "no diagnostics"
+            if "Sign in" in detail or "bot" in detail.lower():
+                detail += " (YouTube may be challenging this request; try updating yt-dlp)"
+            raise YouTubeImportError(f"Download failed: {detail}") from exc
+    else:
+        download_command = [
+            *yt_command,
+            "-f", "bestaudio/best",
+            "--no-playlist",
+            "--no-part",
+            "--newline",
+            "-o", str(output_dir / "%(title)s.%(ext)s"),
+            url,
+        ]
+        try:
+            download = subprocess.run(
+                download_command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=DOWNLOAD_TIMEOUT_SEC,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise YouTubeImportError(
+                f"Download timed out after {DOWNLOAD_TIMEOUT_SEC // 60} minutes. "
+                "Check the network connection and try again."
+            ) from exc
+        except OSError as exc:
+            raise YouTubeImportError(f"Could not start yt-dlp: {exc}") from exc
+
+        if download.returncode != 0:
+            tail = (download.stderr or download.stdout or "").strip().splitlines()
+            detail = tail[-1] if tail else "no diagnostics"
+            if "Sign in" in detail or "bot" in detail.lower():
+                detail += " (YouTube may be challenging this request; try updating yt-dlp)"
+            raise YouTubeImportError(f"Download failed: {detail}")
 
     produced = [
         p for p in output_dir.rglob("*")
