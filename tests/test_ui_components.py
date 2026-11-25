@@ -497,6 +497,38 @@ class TestUIModules(unittest.TestCase):
         self.assertTrue(dialog.findChild(QScrollArea).widgetResizable())
         dialog.close()
 
+    def test_about_update_worker_reenables_button_when_check_raises(self):
+        self._application()
+        from types import SimpleNamespace
+        from ui.panels import about_panel
+        from ui.panels.about_panel import AboutDialog
+
+        dialog = AboutDialog()
+
+        class _SyncThread:
+            def __init__(self, target, daemon=False):
+                self.target = target
+
+            def start(self):
+                try:
+                    self.target()
+                except Exception as exc:
+                    self.error = exc
+
+        def _immediate_single_shot(delay, receiver, callback):
+            callback()
+
+        with (
+            patch.object(about_panel, "threading", SimpleNamespace(Thread=_SyncThread)),
+            patch("ui.qt_compat.QTimer.singleShot", side_effect=_immediate_single_shot),
+            patch.object(about_panel, "check_latest_release", side_effect=RuntimeError("boom")),
+        ):
+            dialog._on_check_updates()
+
+        self.assertTrue(dialog._btn_check_update.isEnabled())
+        self.assertNotIn("Checking GitHub Releases", dialog._update_status.text())
+        dialog.close()
+
     def test_preview_2d_selection_does_not_drag_fixture(self):
         self._application()
         from ui.panels.preview_tab import Stage2DCanvas

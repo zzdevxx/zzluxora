@@ -11,7 +11,7 @@ Panduan arsitektur, instruksi pengembangan, dan konteks operasional untuk **ZZLU
 Perintah wajib:
 ```powershell
 # Windows PowerShell (venv Python 3.15.2)
-$env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py   # 197 test unik (166 unittest + 31 pytest), tanpa popup
+$env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py   # 206 test unik, 205 lulus, 1 dilewati
 node scripts/check-anti-slop.js --summary                                             # audit anti-slop kode dan dokumentasi
 python D:\ANDREAS\PERSONAL\agent-memory\tools\memlog.py search "kata kunci"           # memori agen lintas proyek
 ```
@@ -20,7 +20,7 @@ python D:\ANDREAS\PERSONAL\agent-memory\tools\memlog.py search "kata kunci"     
 
 ## 1. Ikhtisar & Identitas Proyek
 
-- **Nama Aplikasi:** **ZZLUXORA** (`core/version.py`: `v10.0` / `10.0.0`, naik `+0.1` tiap rilis)
+- **Nama Aplikasi:** **ZZLUXORA** (`core/version.py`: `v10.1` / `10.1.0`, naik `+0.1` tiap rilis)
 - **Repositori (origin):** `https://gitlab.com/zzdevxx/zzluxora.git` (Branch: `main`); mirror: `codeberg` dan `github`. Portal unduhan: `https://zzdree.my.id/zzluxora/` (`zzdevxx/zzluxora-download`).
 - **Peneliti / Pengembang:** Andreas Restuawanta Christwara (`NIM: 5312422036`)
 - **Dosen Pembimbing:** Mario Norman Syah, S.Pd., M.Eng.
@@ -96,7 +96,7 @@ zzluxora/
 │   ├── qlcplus_template.qxw   # Template SITL loopback QLC+ (8CH)
 │   └── zzluxora_test.qxw      # Workspace pengujian visualizer loopback
 │
-├── tests/                     # 15 berkas, 197 test unik (166 unittest + 31 pytest)
+├── tests/                     # 16 berkas, 206 test unik (175 unittest + 31 pytest)
 │   ├── test_fft_engine.py, test_audio_loader.py, test_feature_extractor.py
 │   ├── test_emotion_model.py, test_color_engine.py, test_artnet_sender.py
 │   ├── test_project_io.py, test_ui_components.py, test_audit_regressions.py
@@ -166,7 +166,7 @@ zzluxora/
 1. **Semua warna UI wajib dari token `Theme` di `ui/styles.py`** | hex inline dilarang (hanya `ui/styles.py` dan `ui/icons.py` yang boleh memuat literal hex).
 2. **Anti-slop keras:** tanpa emoji di chrome UI dan heading, tanpa em-dash/en-dash (`|` atau `-`), tanpa glow/cyberpunk palsu, tanpa biru web generik untuk aksi utama (hijau `#16a34a` / amber / cyan sesuai `DESIGN.md`).
 3. **Kontras WCAG:** teks pada fill channel terang (amber, cyan, yellow, dll) wajib pakai `Theme.SURFACE_VOID`; gelap -> `Theme.TEXT_PRIMARY`. Peta lengkap di `ui/panels/address_tab.py::update_style`.
-4. **Test wajib sebelum commit:** `$env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py` -> saat ini **197 test unik lulus** (166 unittest + 31 pytest, exit 0). Wrapper ini menetralkan QMessageBox/QFileDialog/QInputDialog lebih dulu sehingga tidak ada popup yang muncul di layar operator saat pengujian. Perintah lama `python -m unittest discover -s tests -p "test_*.py"` tidak direkomendasikan karena dapat memunculkan popup dialog. Audit anti-slop: 0 error, 0 warning.
+4. **Test wajib sebelum commit:** `$env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py` -> saat ini **206 test terkumpul** (175 unittest + 31 pytest; 205 lulus, 1 dilewati, exit 0). Wrapper ini menetralkan QMessageBox/QFileDialog/QInputDialog lebih dulu sehingga tidak ada popup yang muncul di layar operator saat pengujian. Perintah lama `python -m unittest discover -s tests -p "test_*.py"` tidak direkomendasikan karena dapat memunculkan popup dialog. Audit anti-slop: 0 error, 0 warning.
 5. **Ditunda:** *Live Cue Ribbon* (swatch RGBW + pan/tilt per cue) menunggu arahan owner.
 
-**Status uji terakhir:** 197 test unik OK (166 unittest [1 skipped] + 31 pytest) | Python 3.15.2 `.venv` | audit anti-slop bersih (0 error, 0 warning) | jalankan via `tools/run_tests_guarded.py`.
+**Status uji terakhir:** 206 test unik terkumpul (175 unittest + 31 pytest; 205 lulus, 1 dilewati) | Python 3.15.2 `.venv` | audit anti-slop bersih (0 error, 0 warning) | jalankan via `tools/run_tests_guarded.py`.

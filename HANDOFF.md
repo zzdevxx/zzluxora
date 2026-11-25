@@ -2,7 +2,7 @@
 
 Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebelum menyentuh apa pun.
 
-**Terakhir diperbarui:** 19 Oktober 2026 (sesi verifikasi black-box, penyelarasan Bab 4 & 5 naskah v5, serta sinkronisasi Tritunggal repositori)
+**Terakhir diperbarui:** 26 November 2026 (rilis lokal v10.1, audit suite, portal, dan pembaruan metadata)
 **Oleh:** sesi integrasi riset skripsi & hardware
 
 ---
@@ -26,10 +26,10 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 
 | | |
 |---|---|
-| Software `zzdevxx/zzluxora` (ex `zzluxora-v10`) | Portal **`https://zzdree.my.id/zzluxora/`**, versi inkremental `+0.1` mulai `v10.0` (`10.0.0`) |
+| Software `zzdevxx/zzluxora` (ex `zzluxora-v10`) | Versi lokal `v10.1` (`10.1.0`), installer dibangun; publikasi GitHub Release masih menunggu |
 | Naskah `zzdevxx/zzluxora-thesis` | HEAD **`b2fbbc7`**, bersih, sinkron (Bab 4 & 5 naskah v5 terisi data empiris) |
 | Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`cddd36f`**, bersih, sinkron (firmware v5.0.0 pacing absolut 43.07 FPS & packet counter) |
-| Test suite | **194 test unik lulus** (163 unittest + 31 pytest), exit 0 · jumlah wajib diperiksa, lihat §2c |
+| Test suite | **206 test unik terkumpul** (175 unittest + 31 pytest; 205 lulus, 1 dilewati), exit 0 |
 | Skenario Tab | **38/38 skenario per tab LULUS 100%** (`python3 tools/run_all_tab_scenarios.py`) |
 | Skenario Ekstrem | **8/8 skenario lanjut & edge-case LULUS 100%** (`python3 tools/test_advanced_scenarios.py`) |
 | Skenario Undo/Redo | **5/5 skenario context-aware Undo/Redo LULUS 100%** (`python3 tools/test_global_undo_redo.py`) |
@@ -56,7 +56,7 @@ PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py
 
 # PERIKSA JUMLAH test yang benar-benar dikumpulkan (bukan hanya status OK)
 QT_QPA_PLATFORM=offscreen PYTHONPATH=$PWD/tools python3 -m pytest tests/ --collect-only -q | tail -1
-# 194 tests collected. JANGAN menghitung dengan unittest discover: ia ikut
+# 206 tests collected. JANGAN menghitung dengan unittest discover: ia ikut
 # mengumpulkan berkas gaya-pytest dan melaporkan 149, angka yang menyesatkan.
 # Kalau turun mendadak, ada berkas test gagal diimpor.
 
@@ -448,7 +448,7 @@ Skrip probe pernah memunculkan popup `QMessageBox` berulang di layar owner yang 
    ```bash
    PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py
    QT_QPA_PLATFORM=offscreen PYTHONPATH=$PWD/tools python3 -m pytest tests/ --collect-only -q | tail -1
-   # 194 tests collected; periksa angkanya, jangan hanya status OK
+   # 206 tests collected; periksa angkanya, jangan hanya status OK
    ```
 3. **Lihat UI-nya sebelum mengubahnya:**
    ```bash

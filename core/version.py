@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
+from collections.abc import Mapping
 from typing import Any
 
 APP_NAME = "ZZLUXORA"
@@ -53,9 +54,15 @@ def check_latest_release(timeout: float = 5.0) -> dict[str, Any]:
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             payload = json.loads(resp.read().decode("utf-8"))
+        if not isinstance(payload, Mapping):
+            raise ValueError("release metadata must be a JSON object")
         latest_tag = str(payload.get("tag_name") or APP_TAG)
         html_url = str(payload.get("html_url") or RELEASES_PAGE_URL)
         assets = payload.get("assets") or []
+        if not isinstance(assets, (list, tuple)) or any(
+            not isinstance(asset, Mapping) for asset in assets
+        ):
+            raise ValueError("release assets must be a list of JSON objects")
         installer = next(
             (a for a in assets if str(a.get("name", "")).lower().endswith(".exe")),
             None,

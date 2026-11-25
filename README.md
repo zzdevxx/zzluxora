@@ -4,7 +4,7 @@
 [![Portal](https://img.shields.io/badge/Web%20Portal-zzdree.my.id%2Fzzluxora-2563eb?style=flat-square)](https://zzdree.my.id/zzluxora/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B%20%7C%203.15.2-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Qt](https://img.shields.io/badge/PySide6-Qt6-41CD52?style=flat-square&logo=qt)](https://doc.qt.io/qtforpython/)
-[![Tests](https://img.shields.io/badge/Tests-202%20passing-brightgreen?style=flat-square)](https://github.com/zzdevxx/zzluxora)
+[![Tests](https://img.shields.io/badge/Tests-205%20passed%2C%201%20skipped-brightgreen?style=flat-square)](https://github.com/zzdevxx/zzluxora)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](LICENSE)
 
 > **Portal Unduhan Resmi:** [`https://zzdree.my.id/zzluxora/`](https://zzdree.my.id/zzluxora/) (Installer Windows `ZZLUXORA-Setup-10.1.0.exe` & Simulator DMX512 Interaktif).  
@@ -78,7 +78,7 @@ PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py
 $env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py
 ```
 
-Ini adalah runner resmi. `python -m unittest discover -s tests` **jangan** dipakai: perintah itu ikut mengumpulkan berkas gaya-pytest (menghitung ganda) dan dapat memunculkan dialog `QMessageBox`. `run_tests_guarded.py` menetralkan dialog dan memilih runner per berkas. Suite saat ini mencakup **202 test unik** (171 unittest + 31 pytest).
+Ini adalah runner resmi. `python -m unittest discover -s tests` **jangan** dipakai: perintah itu ikut mengumpulkan berkas gaya-pytest (menghitung ganda) dan dapat memunculkan dialog `QMessageBox`. `run_tests_guarded.py` menetralkan dialog dan memilih runner per berkas. Suite saat ini mengumpulkan **206 test unik** (175 unittest + 31 pytest); hasil terakhir mencatat 205 lulus dan 1 dilewati.
 
 > Catatan bahan uji: 10 berkas WAV di `data/audio/` adalah **audio sintetis** yang dibangkitkan `tools/generate_benchmark_audio.py` (12 detik, 22.050 Hz, mono) dan dinamai menurut lagu referensi; ini **bukan rekaman berlisensi**. Untuk bahan uji persepsi, gunakan `tools/fetch_test_audio.py` yang mengunduh audio nyata beserta sidecar provenance.
 

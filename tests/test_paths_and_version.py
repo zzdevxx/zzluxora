@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from core import paths, version
 
@@ -61,6 +62,48 @@ class TestVersionAndPaths(unittest.TestCase):
                         paths.writable_audio_dir(),
                         local.resolve() / "ZZLUXORA" / "data" / "audio",
                     )
+
+
+class TestCheckLatestReleaseRobustness(unittest.TestCase):
+    def _urlopen(self, payload: bytes):
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = payload
+        return patch("urllib.request.urlopen", return_value=response)
+
+    def test_valid_release_payload_keeps_public_contract(self) -> None:
+        payload = json.dumps({
+            "tag_name": "v10.2",
+            "html_url": "https://github.com/zzdevxx/zzluxora/releases/tag/v10.2",
+            "assets": [{
+                "name": "ZZLUXORA-Setup-10.2.0.exe",
+                "browser_download_url": "https://example.invalid/setup.exe",
+                "size": 1234,
+            }],
+        }).encode("utf-8")
+        with self._urlopen(payload):
+            result = version.check_latest_release()
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["latest_tag"], "v10.2")
+        self.assertEqual(result["installer_name"], "ZZLUXORA-Setup-10.2.0.exe")
+        self.assertEqual(result["installer_size"], 1234)
+        self.assertTrue(result["update_available"])
+
+    def test_json_array_payload_returns_stable_error_result(self) -> None:
+        with self._urlopen(b"[]"):
+            result = version.check_latest_release()
+        self.assertFalse(result["ok"])
+        self.assertIn("error", result)
+        self.assertEqual(result["current_version"], version.APP_VERSION)
+        self.assertEqual(result["current_tag"], version.APP_TAG)
+        self.assertEqual(result["portal_url"], version.PORTAL_URL)
+        self.assertEqual(result["release_url"], version.RELEASES_PAGE_URL)
+
+    def test_malformed_assets_returns_stable_error_result(self) -> None:
+        with self._urlopen(b'{"tag_name":"v10.2","assets":"not-a-list"}'):
+            result = version.check_latest_release()
+        self.assertFalse(result["ok"])
+        self.assertIn("error", result)
+        self.assertEqual(result["portal_url"], version.PORTAL_URL)
 
 
 if __name__ == "__main__":

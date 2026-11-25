@@ -164,24 +164,31 @@ class AboutDialog(QDialog if HAS_QT else object):
         self._update_status.setText("Checking GitHub Releases...")
 
         def _worker() -> None:
-            result = check_latest_release()
             from ui.qt_compat import QTimer
 
-            def _apply() -> None:
-                self._btn_check_update.setEnabled(True)
-                if not result.get("ok"):
-                    self._update_status.setText(
-                        f'Offline or rate-limited. Portal: <a href="{PORTAL_URL}" style="color: {Theme.ACCENT_CYAN};">zzdree.my.id/zzluxora/</a>'
-                    )
-                    return
-                latest_tag = result.get("latest_tag")
-                if result.get("update_available"):
-                    self._update_status.setText(
-                        f'Update {latest_tag} ready: <a href="{PORTAL_URL}" style="color: {Theme.ACCENT_CYAN};">Download from portal</a>'
-                    )
-                else:
-                    self._update_status.setText(f"Up to date ({APP_TAG} / latest remote {latest_tag}).")
+            # Button must leave the busy state on every path: an unexpected API
+            # payload or worker exception must not strand About on "Checking".
+            result = {"ok": False, "error": "update check did not return a result"}
+            try:
+                result = check_latest_release()
+            except Exception as exc:
+                result = {"ok": False, "error": str(exc)}
+            finally:
+                def _apply() -> None:
+                    self._btn_check_update.setEnabled(True)
+                    if not result.get("ok"):
+                        self._update_status.setText(
+                            f'Offline or rate-limited. Portal: <a href="{PORTAL_URL}" style="color: {Theme.ACCENT_CYAN};">zzdree.my.id/zzluxora/</a>'
+                        )
+                        return
+                    latest_tag = result.get("latest_tag")
+                    if result.get("update_available"):
+                        self._update_status.setText(
+                            f'Update {latest_tag} ready: <a href="{PORTAL_URL}" style="color: {Theme.ACCENT_CYAN};">Download from portal</a>'
+                        )
+                    else:
+                        self._update_status.setText(f"Up to date ({APP_TAG} / latest remote {latest_tag}).")
 
-            QTimer.singleShot(0, self, _apply)
+                QTimer.singleShot(0, self, _apply)
 
         threading.Thread(target=_worker, daemon=True).start()
