@@ -12,13 +12,14 @@ import sys
 import time
 from pathlib import Path
 
-from core.paths import asset_path
-from core.version import APP_VERSION
-
-# Ensure root directory in sys.path
+# Ensure root directory in sys.path before local package imports when launched
+# from an external working directory without PYTHONPATH set.
 BASE_DIR = Path(__file__).resolve().parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
+
+from core.paths import asset_path
+from core.version import APP_VERSION
 
 from core import (
     STFTEngine,

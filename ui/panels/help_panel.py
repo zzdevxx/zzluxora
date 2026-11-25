@@ -41,30 +41,6 @@ class HelpDialog(QDialog if HAS_QT else object):
         grp.setStyleSheet(f"QGroupBox {{ font-weight: 700; color: {Theme.TEXT_PRIMARY}; }}")
         grp_layout = QVBoxLayout(grp)
 
-        self.table = QTableWidget(19, 2)
-        self.table.setHorizontalHeaderLabels(["Action / Function", "Key"])
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table.verticalHeader().setVisible(False)
-        try:
-            self.table.setEditTriggers(getattr(getattr(QTableWidget, "EditTrigger", QTableWidget), "NoEditTriggers", 0))
-        except Exception:
-            pass
-        self.table.setStyleSheet(f"""
-            QTableWidget {{
-                background-color: {Theme.BG_SURFACE};
-                border: 1px solid {Theme.BORDER_STRONG};
-                border-radius: 4px;
-                color: {Theme.TEXT_PRIMARY};
-            }}
-            QHeaderView::section {{
-                background-color: {Theme.BG_ELEVATED};
-                color: {Theme.TEXT_PRIMARY};
-                font-weight: 700;
-                padding: 4px;
-                border: 1px solid {Theme.BORDER_SUBTLE};
-            }}
-        """)
-
         shortcuts = [
             ("Open Project (.zlx)", "Ctrl+O"),
             ("Save Project", "Ctrl+S"),
@@ -88,6 +64,30 @@ class HelpDialog(QDialog if HAS_QT else object):
             ("Global Redo", "Ctrl+Shift+Z"),
             ("Global Redo (alternate)", "Ctrl+Y"),
         ]
+
+        self.table = QTableWidget(len(shortcuts), 2)
+        self.table.setHorizontalHeaderLabels(["Action / Function", "Key"])
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.verticalHeader().setVisible(False)
+        try:
+            self.table.setEditTriggers(getattr(getattr(QTableWidget, "EditTrigger", QTableWidget), "NoEditTriggers", 0))
+        except Exception:
+            pass
+        self.table.setStyleSheet(f"""
+            QTableWidget {{
+                background-color: {Theme.BG_SURFACE};
+                border: 1px solid {Theme.BORDER_STRONG};
+                border-radius: 4px;
+                color: {Theme.TEXT_PRIMARY};
+            }}
+            QHeaderView::section {{
+                background-color: {Theme.BG_ELEVATED};
+                color: {Theme.TEXT_PRIMARY};
+                font-weight: 700;
+                padding: 4px;
+                border: 1px solid {Theme.BORDER_SUBTLE};
+            }}
+        """)
 
         for row, (action_text, key_text) in enumerate(shortcuts):
             it1 = QTableWidgetItem(action_text)

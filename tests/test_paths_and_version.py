@@ -14,12 +14,28 @@ from core import paths, version
 
 class TestVersionAndPaths(unittest.TestCase):
     def test_version_constants_and_comparison(self) -> None:
-        self.assertEqual(version.APP_VERSION, "10.0.0")
-        self.assertEqual(version.APP_TAG, "v10.0")
-        self.assertTrue(version.is_newer_version("v10.1", "10.0.0"))
+        self.assertEqual(version.APP_VERSION, "10.1.0")
+        self.assertEqual(version.APP_TAG, "v10.1")
+        self.assertTrue(version.is_newer_version("v10.2", "10.1.0"))
         self.assertTrue(version.is_newer_version("10.10.0", "10.9.0"))
-        self.assertFalse(version.is_newer_version("v10.0", "10.0.0"))
-        self.assertFalse(version.is_newer_version("9.9.9", "10.0.0"))
+        self.assertFalse(version.is_newer_version("v10.1", "10.1.0"))
+        self.assertFalse(version.is_newer_version("9.9.9", "10.1.0"))
+
+    def test_main_runs_from_external_working_directory(self) -> None:
+        import subprocess
+        main_script = paths.REPO_ROOT / "main.py"
+        clean_env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+        with tempfile.TemporaryDirectory() as external_cwd:
+            proc = subprocess.run(
+                [sys.executable, str(main_script), "--help"],
+                cwd=external_cwd,
+                env=clean_env,
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertIn("ZZLUXORA v10.1.0", proc.stdout)
 
     def test_dev_paths_point_inside_repo_and_logo_exists(self) -> None:
         self.assertFalse(paths.is_frozen())

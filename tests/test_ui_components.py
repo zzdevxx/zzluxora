@@ -2048,6 +2048,24 @@ class TestUIModules(unittest.TestCase):
         self.assertEqual([f["name"] for f in patched], [f"zzdree-36X #{i}" for i in range(1, 5)])
         win.close()
 
+    def test_help_dialog_displays_all_shortcut_rows(self):
+        """HelpDialog must allocate rows for every shortcut without silently dropping Ctrl+Y."""
+        self._application()
+        from ui.panels.help_panel import HelpDialog
+
+        dlg = HelpDialog()
+        try:
+            self.assertGreaterEqual(dlg.table.rowCount(), 21)
+            actions = [
+                dlg.table.item(r, 0).text()
+                for r in range(dlg.table.rowCount())
+                if dlg.table.item(r, 0) is not None
+            ]
+            self.assertEqual(len(actions), dlg.table.rowCount())
+            self.assertIn("Global Redo (alternate)", actions)
+        finally:
+            dlg.close()
+
 
 if __name__ == "__main__":
     unittest.main()

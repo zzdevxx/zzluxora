@@ -1,13 +1,13 @@
-# ZZLUXORA v10.0 | Intelligent Stage Lighting Console
+# ZZLUXORA v10.1 | Intelligent Stage Lighting Console
 
-[![Release](https://img.shields.io/badge/Release-v10.0.0-16a34a?style=flat-square)](https://github.com/zzdevxx/zzluxora/releases/latest)
+[![Release](https://img.shields.io/badge/Release-v10.1.0-16a34a?style=flat-square)](https://github.com/zzdevxx/zzluxora/releases/latest)
 [![Portal](https://img.shields.io/badge/Web%20Portal-zzdree.my.id%2Fzzluxora-2563eb?style=flat-square)](https://zzdree.my.id/zzluxora/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B%20%7C%203.15.2-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Qt](https://img.shields.io/badge/PySide6-Qt6-41CD52?style=flat-square&logo=qt)](https://doc.qt.io/qtforpython/)
-[![Tests](https://img.shields.io/badge/Tests-200%20passing-brightgreen?style=flat-square)](https://github.com/zzdevxx/zzluxora)
+[![Tests](https://img.shields.io/badge/Tests-202%20passing-brightgreen?style=flat-square)](https://github.com/zzdevxx/zzluxora)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](LICENSE)
 
-> **Portal Unduhan Resmi:** [`https://zzdree.my.id/zzluxora/`](https://zzdree.my.id/zzluxora/) (Installer Windows `ZZLUXORA-Setup-10.0.0.exe` & Simulator DMX512 Interaktif).  
+> **Portal Unduhan Resmi:** [`https://zzdree.my.id/zzluxora/`](https://zzdree.my.id/zzluxora/) (Installer Windows `ZZLUXORA-Setup-10.1.0.exe` & Simulator DMX512 Interaktif).  
 > Skema rilis naik `+0.1` per pembaruan mulai dari **`v10.0`** (`10.0.0` -> `v10.1` / `10.1.0` -> `v10.2` ...), menggantikan arsip seri lama (`zzluxora-v7`, `zzluxora-v8`, `zzluxora-v8.5`, `zzluxora-v9`).
 
 
@@ -29,7 +29,7 @@ Proyek ini merupakan perangkat lunak konsol utama dari ekosistem riset terintegr
 | **Hardware Node** | [**`zzdevxx/esp32-artnet-dmx`**](https://gitlab.com/zzdevxx/esp32-artnet-dmx) | Prototipe perangkat keras konverter nirkabel Art-Net ke DMX512 berbasis ESP32 Dual-Core (FreeRTOS SMP Core 0 DMX / Core 1 WiFi), transceiver RS-485 MAX485, LCD 16x2 I2C, dan boks fabrikasi Box X4 DIY. |
 | **Library Fixture** | [**`zzdevxx/zz-fixture`**](https://github.com/zzdevxx/zz-fixture) | Katalog profil fixture `.qxf` & `.zfx` (`Alien-AL36`, `Illumsolid-YSP01`, `Kumastb-STL47`, `Wisdom-54X3`, `zzdree-36X`) beserta showfile template QLC+. |
 | **Naskah & Riset** | [**`zzdevxx/zzluxora-thesis`**](https://gitlab.com/zzdevxx/zzluxora-thesis) | Naskah akademik skripsi S1 Teknik Komputer FT UNNES, pemodelan matematis STFT Hann & Russell 2D, protokol uji lapangan 41-kolom, instrumen evaluasi (SUS & Kesesuaian), serta draf ilmiah Bab 1-5 lengkap. |
-| **Portal Unduhan** | [**`zzdree.my.id/zzluxora/`**](https://zzdree.my.id/zzluxora/) | Halaman web publik distribusi installer Windows `ZZLUXORA-Setup-10.0.0.exe` & simulator warna RGBW/DMX512 ([`zzdevxx/zzluxora-download`](https://github.com/zzdevxx/zzluxora-download)). |
+| **Portal Unduhan** | [**`zzdree.my.id/zzluxora/`**](https://zzdree.my.id/zzluxora/) | Halaman web publik distribusi installer Windows `ZZLUXORA-Setup-10.1.0.exe` & simulator warna RGBW/DMX512 ([`zzdevxx/zzluxora-download`](https://github.com/zzdevxx/zzluxora-download)). |
 
 ---
 
@@ -78,7 +78,7 @@ PYTHONPATH=$PWD/tools python3 tools/run_tests_guarded.py
 $env:PYTHONPATH="$PWD\tools"; .\.venv\Scripts\python.exe tools\run_tests_guarded.py
 ```
 
-Ini adalah runner resmi. `python -m unittest discover -s tests` **jangan** dipakai: perintah itu ikut mengumpulkan berkas gaya-pytest (menghitung ganda) dan dapat memunculkan dialog `QMessageBox`. `run_tests_guarded.py` menetralkan dialog dan memilih runner per berkas. Suite saat ini mencakup **197 test unik** (166 unittest + 31 pytest).
+Ini adalah runner resmi. `python -m unittest discover -s tests` **jangan** dipakai: perintah itu ikut mengumpulkan berkas gaya-pytest (menghitung ganda) dan dapat memunculkan dialog `QMessageBox`. `run_tests_guarded.py` menetralkan dialog dan memilih runner per berkas. Suite saat ini mencakup **202 test unik** (171 unittest + 31 pytest).
 
 > Catatan bahan uji: 10 berkas WAV di `data/audio/` adalah **audio sintetis** yang dibangkitkan `tools/generate_benchmark_audio.py` (12 detik, 22.050 Hz, mono) dan dinamai menurut lagu referensi; ini **bukan rekaman berlisensi**. Untuk bahan uji persepsi, gunakan `tools/fetch_test_audio.py` yang mengunduh audio nyata beserta sidecar provenance.
 

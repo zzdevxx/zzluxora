@@ -8,8 +8,8 @@ import urllib.request
 from typing import Any
 
 APP_NAME = "ZZLUXORA"
-APP_VERSION = "10.0.0"
-APP_TAG = "v10.0"
+APP_VERSION = "10.1.0"
+APP_TAG = "v10.1"
 PORTAL_URL = "https://zzdree.my.id/zzluxora/"
 RELEASES_API_URL = "https://api.github.com/repos/zzdevxx/zzluxora/releases/latest"
 RELEASES_PAGE_URL = "https://github.com/zzdevxx/zzluxora/releases/latest"
