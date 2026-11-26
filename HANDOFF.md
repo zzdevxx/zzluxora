@@ -5,6 +5,15 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 **Terakhir diperbarui:** 26 November 2026 (rilis lokal v10.1, audit suite, portal, dan pembaruan metadata)
 **Oleh:** sesi integrasi riset skripsi & hardware
 
+### Audit lanjutan 26 November 2026
+
+- Metadata paket `pyproject.toml` diselaraskan ke `10.1.0`, sesuai `core/version.py`; tag rilis tetap `v10.1`. Pemeriksaan stdlib gagal sebelum perubahan dan lulus sesudahnya. Installer yang sudah terbit tidak diganti.
+- Koreksi cakupan suite Windows: `test_permission_error_is_not_swallowed` dilewati karena Windows tidak mendukung pencabutan izin POSIX melalui `chmod`, bukan karena perangkat lighting. FB-24 adalah pemeriksaan fisik terpisah dan belum dijalankan pada audit ini.
+- Verifikasi unduhan production pada `05:35:58Z` lulus 26/26 pemeriksaan untuk ketiga aset Banklycs/ZZLUXORA; kontrak live 3/3 lulus pada `05:36:05Z`. Digest hasil GET penuh ZZLUXORA cocok dengan installer lokal. Rincian dan batas cache GitHub ada di `D:\ANDREAS\HANDOFF.md` dan repo `zzdree-web/HANDOFF.md`.
+- Suite ulang selesai: **206 kasus unik dikumpulkan, 205 lulus dan 1 dilewati**. Wrapper resmi menjalankan 175 unittest (174 lulus/1 skip) dan 31 pytest lulus, exit 0. Skenario tab **38/38**, skenario lanjut **8/8**, dan Undo/Redo **5/5** lulus. Parity tujuh berkas firmware, lima fixture, skrip black-box, dan manifest portal lulus. Anti-slop strict 0 error/0 warning.
+- Black-box software **FB-01 sampai FB-23 lulus (23/23)**; FB-24 tetap `N/A [VERIFIKASI LAPANGAN]`. Pengiriman Art-Net dicegat dengan guard loopback, tidak diarahkan ke rig nyata. Uji audio memakai fixture WAV yang sudah ada, tanpa membuat atau mengganti audio. Bukti terpisah di temp OpenCode `zzluxora-final-audit-20261126`, terutama `guarded-suite.log`, `blackbox-software-results.json`, dan `verified-summary.json`.
+- `verify_blackbox_fb.py` tidak mengukur waktu startup pada FB-01; FB-23 memeriksa format paket ArtDmx tanpa menjalankan penerima QLC+. Hasil skrip tidak membuktikan startup kurang dari 500 ms, penerimaan QLC+ sungguhan, atau respons perangkat fisik.
+
 ---
 
 ## 0. BACA INI DULU: 3 HAL DALAM 30 DETIK
