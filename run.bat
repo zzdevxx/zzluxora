@@ -1,6 +1,6 @@
 @echo off
 :: ==============================================================================
-:: ZZLUXORA v10.0 - One-Click Stage Lighting Console Launcher (Windows 11)
+:: ZZLUXORA v10.1 - One-Click Stage Lighting Console Launcher (Windows 11)
 :: ==============================================================================
 
 cd /d "%~dp0"
@@ -15,7 +15,7 @@ if %errorlevel% neq 0 (
 )
 
 echo ==================================================
-echo [ZZLUXORA] v10.0.0 — Next-Gen Lighting Console
+echo [ZZLUXORA] v10.1.0 - Stage Lighting Console
 echo ==================================================
 echo Memulai antarmuka konsol panggung...
 

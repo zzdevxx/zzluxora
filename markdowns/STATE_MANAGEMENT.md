@@ -104,7 +104,7 @@ Aplikasi **ZZLUXORA v10** mengadopsi prinsip **Single Source of Truth (SSOT)** d
   ```json
   {
     "app": "ZZLUXORA",
-    "version": "10.0.0",
+    "version": "10.1.0",
     "project_name": "Sunday_Worship_Session",
     "target_ip": "127.0.0.1",
     "target_port": 6454,

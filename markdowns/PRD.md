@@ -1,7 +1,7 @@
-# 📋 PRD.md — ZZLUXORA v10 Product Requirements Document
+# PRD.md - ZZLUXORA v10.1 Product Requirements Document
 
 **Dokumen Kebutuhan Produk: Sistem Pengendali Pencahayaan Panggung Cerdas Berbasis Analisis Audio**  
-*Versi Produk: v10.0.0 (Flagship Next-Gen) | Target Rilis: September 2026*  
+*Versi Produk: v10.1.0 (Rilis Aktif) | Target Awal: September 2026*  
 *Peneliti: Andreas Restuawanta Christwara (NIM: 5312422036) | Pembimbing: Mario Norman Syah, S.Pd., M.Eng.*
 
 ---

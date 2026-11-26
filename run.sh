@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# ZZLUXORA v10.0 - One-Click Stage Lighting Console Launcher (Linux Mint / Debian)
+# ZZLUXORA v10.1 - One-Click Stage Lighting Console Launcher (Linux Mint / Debian)
 # ==============================================================================
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,7 +17,7 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 echo "=================================================="
-echo "ZZLUXORA v10.0 - Next-Gen Lighting Console"
+echo "ZZLUXORA v10.1 - Stage Lighting Console"
 echo "=================================================="
 echo "Memulai antarmuka konsol..."
 

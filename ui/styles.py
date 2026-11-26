@@ -1,6 +1,6 @@
 """
 styles.py | Pure Dark Grey & High-Contrast White Theme (grandMA3 Industrial Console)
-Refined for ZZLUXORA v10.0.0 based on Impeccable Design System ("The Obsidian Control Deck").
+Refined for ZZLUXORA v10.1.0 based on Impeccable Design System ("The Obsidian Control Deck").
 """
 
 from __future__ import annotations

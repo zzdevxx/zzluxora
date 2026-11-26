@@ -183,7 +183,7 @@ Untuk menjaga kestabilan antarmuka di lingkungan panggung (*zero-freeze guarante
 Format JSON terstruktur memuat:
 ```json
 {
-  "version": "10.0.0",
+  "version": "10.1.0",
   "project_name": "Worship_Sunday_Live",
   "created_at": "2026-09-27T10:00:00Z",
   "patch_table": [

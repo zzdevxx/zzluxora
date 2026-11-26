@@ -36,8 +36,8 @@ Dokumen ini untuk agent yang melanjutkan pekerjaan ZZLUXORA. Baca ini dulu sebel
 | | |
 |---|---|
 | Software `zzdevxx/zzluxora` (ex `zzluxora-v10`) | GitHub Release `v10.1` (`10.1.0`) terbit; installer dan manifest cocok dengan aset rilis |
-| Naskah `zzdevxx/zzluxora-thesis` | HEAD **`b2fbbc7`**, bersih, sinkron (Bab 4 & 5 naskah v5 terisi data empiris) |
-| Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`cddd36f`**, bersih, sinkron (firmware v5.0.0 pacing absolut 43.07 FPS & packet counter) |
+| Naskah `zzdevxx/zzluxora-thesis` | HEAD **`a7d2646`**, bersih, sinkron (kerangka Bab 4-5 siap isi data FASE 6; placeholder `[BELUM*]` menunggu uji lapangan dan keputusan pembimbing) |
+| Hardware `zzdevxx/esp32-artnet-dmx` | HEAD **`5a77848`**, bersih, sinkron (firmware v5.2.0 Hardened Production Master, pacing absolut 43.07 FPS nominal & packet counter) |
 | Test suite | **206 test unik terkumpul** (175 unittest + 31 pytest; 205 lulus, 1 dilewati), exit 0 |
 | Skenario Tab | **38/38 skenario per tab LULUS 100%** (`python3 tools/run_all_tab_scenarios.py`) |
 | Skenario Ekstrem | **8/8 skenario lanjut & edge-case LULUS 100%** (`python3 tools/test_advanced_scenarios.py`) |
